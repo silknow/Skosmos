@@ -1,26 +1,105 @@
 <?php
 
-/**
- * GlobalConfig provides access to the Skosmos configuration in config.inc.
- */
-class GlobalConfig {
-    private $languages;
+EasyRdf\RdfNamespace::set('skosmos', 'http://purl.org/net/skosmos#');
+EasyRdf\RdfNamespace::set('skosext', 'http://purl.org/finnonto/schema/skosext#');
+EasyRdf\RdfNamespace::set('isothes', 'http://purl.org/iso25964/skos-thes#');
+EasyRdf\RdfNamespace::set('mads', 'http://www.loc.gov/mads/rdf/v1#');
+EasyRdf\RdfNamespace::set('wd', 'http://www.wikidata.org/entity/');
+EasyRdf\RdfNamespace::set('wdt', 'http://www.wikidata.org/prop/direct/');
 
-    public function __construct($config_name='/../config.inc')
+/**
+ * GlobalConfig provides access to the Skosmos configuration in config.ttl.
+ */
+class GlobalConfig extends DataObject {
+
+    public function __construct($config_name='/../config.ttl')
     {
         try {
             $file_path = dirname(__FILE__) . $config_name;
             if (!file_exists($file_path)) {
-                throw new Exception('config.inc file is missing, please provide one.');
+                throw new Exception('config.ttl file is missing, please provide one.');
             }
-            require_once($file_path);
-            if (isset($LANGUAGES)) {
-                $this->languages = $LANGUAGES;
+            $this->parseConfig($file_path);
+
+            $configResources = $this->graph->allOfType("skosmos:Configuration");
+            if (is_null($configResources) || !is_array($configResources) || count($configResources) !== 1) {
+                throw new Exception("config.ttl must have exactly one skosmos:Configuration");
             }
+            $this->resource = $configResources[0];
+            var_dump($this->getDefaultEndpoint());die;
+            var_dump($configs);die;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
             return;
         }
+    }
+
+    /**
+     * Parses configuration from the config.ttl file
+     * @param string $filename path to config.ttl file
+     */
+    private function parseConfig($filename)
+    {
+        $this->graph = new EasyRdf\Graph();
+        $parser = new SkosmosTurtleParser();
+        $parser->parse($this->graph, file_get_contents($filename), 'turtle', $filename);
+        $this->namespaces = $parser->getNamespaces();
+    }
+
+        /**
+     * Returns a boolean value based on a literal value from the vocabularies.ttl configuration.
+     * @param string $property the property to query
+     * @param boolean $default the default value if the value is not set in configuration
+     */
+    private function getBoolean($property, $default = false)
+    {
+        $val = $this->resource->getLiteral($property);
+        if ($val) {
+            return filter_var($val->getValue(), FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return $default;
+    }
+
+    /**
+     * Returns an array of URIs based on a property from the vocabularies.ttl configuration.
+     * @param string $property the property to query
+     * @return string[] List of URIs
+     */
+    private function getResources($property)
+    {
+        $resources = $this->resource->allResources($property);
+        $ret = array();
+        foreach ($resources as $res) {
+            $ret[] = $res->getURI();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Returns a boolean value based on a literal value from the vocabularies.ttl configuration.
+     * @param string $property the property to query
+     * @param string $default default value
+     * @param string $lang preferred language for the literal
+     */
+    private function getLiteral($property, $default=null, $lang=null)
+    {
+        if (!isset($lang)) {;
+            $lang = $this->getEnvLang();
+        }
+
+        $literal = $this->resource->getLiteral($property, $lang);
+        if ($literal) {
+            return $literal->getValue();
+        }
+
+        // not found with selected language, try any language
+        $literal = $this->resource->getLiteral($property);
+        if ($literal)
+          return $literal->getValue();
+
+        return $default;
     }
 
     private function getConstant($name, $default)
@@ -38,9 +117,6 @@ class GlobalConfig {
      */
     public function getLanguages()
     {
-        if ($this->languages) {
-            return $this->languages;
-        }
         return array('en' => 'en_GB.utf8');
     }
 
@@ -81,7 +157,7 @@ class GlobalConfig {
      */
     public function getDefaultEndpoint()
     {
-        return $this->getConstant('DEFAULT_ENDPOINT', 'http://localhost:3030/ds/sparql');
+        return $this->getLiteral('skosmos:sparqlEndpoint', 'http://localhost:3030/ds/sparql');
     }
 
     /**
