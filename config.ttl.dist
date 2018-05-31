@@ -113,7 +113,7 @@
 :cat_general a skos:Concept ;
     skos:topConceptOf :categories ;
     skos:inScheme :categories ;
-    skos:prefLabel "Yleiskäsitteet"@fi, 
+    skos:prefLabel "Yleiskäsitteet"@fi,
         "Allmänna begrepp"@sv,
         "General concepts"@en
 .
