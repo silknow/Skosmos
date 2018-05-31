@@ -15,10 +15,12 @@ class GlobalConfig extends DataObject {
     public function __construct($config_name='/../config.ttl')
     {
         try {
-            $file_path = dirname(__FILE__) . $config_name;
+            $file_path = realpath( dirname(__FILE__) . $config_name );
             if (!file_exists($file_path)) {
                 throw new Exception('config.ttl file is missing, please provide one.');
             }
+            # EasyRDF appears to prepend the file location# to the nodes without a namespace
+            EasyRdf\RdfNamespace::set('emptyns', $file_path . '#');
             $this->parseConfig($file_path);
 
             $configResources = $this->graph->allOfType("skosmos:Configuration");
@@ -26,7 +28,7 @@ class GlobalConfig extends DataObject {
                 throw new Exception("config.ttl must have exactly one skosmos:Configuration");
             }
             $this->resource = $configResources[0];
-            var_dump($this->getDefaultEndpoint());die;
+            var_dump($this->getLanguages());die;
             var_dump($configs);die;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
@@ -57,7 +59,6 @@ class GlobalConfig extends DataObject {
         if ($val) {
             return filter_var($val->getValue(), FILTER_VALIDATE_BOOLEAN);
         }
-
         return $default;
     }
 
@@ -73,7 +74,6 @@ class GlobalConfig extends DataObject {
         foreach ($resources as $res) {
             $ret[] = $res->getURI();
         }
-
         return $ret;
     }
 
@@ -102,14 +102,6 @@ class GlobalConfig extends DataObject {
         return $default;
     }
 
-    private function getConstant($name, $default)
-    {
-        if (defined($name) && constant($name)) {
-            return constant($name);
-        }
-        return $default;
-    }
-
     /**
      * Returns the UI languages specified in the configuration or defaults to
      * only show English
@@ -117,7 +109,20 @@ class GlobalConfig extends DataObject {
      */
     public function getLanguages()
     {
-        return array('en' => 'en_GB.utf8');
+        $languageResources = $this->resource->allResources('skosmos:languages');
+        if ($languageResources) {
+            $languages = array();
+            foreach ($languageResources as $idx => $languageResource) {
+                $languageName = $languageResource->getLiteral('emptyns:name');
+                $languageValue = $languageResource->getLiteral('emptyns:value');
+                if ($languageName and $languageValue) {
+                    $languages[$languageName->getValue()] = $languageValue->getValue();
+                }
+            }
+            return $languages;
+        } else {
+            return array('en' => 'en_GB.utf8');
+        }
     }
 
     /**
@@ -127,7 +132,7 @@ class GlobalConfig extends DataObject {
      */
     public function getVocabularyConfigFile()
     {
-        return $this->getConstant('VOCABULARIES_FILE', 'vocabularies.ttl');
+        return 'vocabularies.ttl';
     }
 
     /**
@@ -137,7 +142,7 @@ class GlobalConfig extends DataObject {
      */
     public function getHttpTimeout()
     {
-        return $this->getConstant('HTTP_TIMEOUT', 5);
+        return $this->getLiteral('skosmos:httpTimeout', 5);
     }
 
     /**
@@ -147,7 +152,7 @@ class GlobalConfig extends DataObject {
      */
     public function getSparqlTimeout()
     {
-        return $this->getConstant('SPARQL_TIMEOUT', 20);
+        return $this->getLiteral('skosmos:sparqlTimeout', 20);
     }
 
     /**
@@ -161,21 +166,13 @@ class GlobalConfig extends DataObject {
     }
 
     /**
-     * @return string
-     */
-    public function getSparqlGraphStore()
-    {
-        return $this->getConstant('SPARQL_GRAPH_STORE', null);
-    }
-
-    /**
      * Returns the maximum number of items to return in transitive queries if defined
      * in the configuration or the default value of 1000.
      * @return integer
      */
     public function getDefaultTransitiveLimit()
     {
-        return $this->getConstant('DEFAULT_TRANSITIVE_LIMIT', 1000);
+        return $this->getLiteral('skosmos:transitiveLimit', 1000);
     }
 
     /**
@@ -185,7 +182,7 @@ class GlobalConfig extends DataObject {
      */
     public function getSearchResultsSize()
     {
-        return $this->getConstant('SEARCH_RESULTS_SIZE', 20);
+        return $this->getLiteral('skosmos:searchResultsSize', 20);
     }
 
     /**
@@ -195,7 +192,7 @@ class GlobalConfig extends DataObject {
      */
     public function getTemplateCache()
     {
-        return $this->getConstant('TEMPLATE_CACHE', '/tmp/skosmos-template-cache');
+        return $this->getLiteral('TEMPLATE_CACHE', '/tmp/skosmos-template-cache');
     }
 
     /**
@@ -205,7 +202,7 @@ class GlobalConfig extends DataObject {
      */
     public function getDefaultSparqlDialect()
     {
-        return $this->getConstant('DEFAULT_SPARQL_DIALECT', 'Generic');
+        return $this->getLiteral('DEFAULT_SPARQL_DIALECT', 'Generic');
     }
 
     /**
@@ -214,7 +211,7 @@ class GlobalConfig extends DataObject {
      */
     public function getFeedbackAddress()
     {
-        return $this->getConstant('FEEDBACK_ADDRESS', null);
+        return $this->getLiteral('FEEDBACK_ADDRESS', null);
     }
 
     /**
@@ -223,7 +220,7 @@ class GlobalConfig extends DataObject {
      */
     public function getFeedbackSender()
     {
-        return $this->getConstant('FEEDBACK_SENDER', null);
+        return $this->getLiteral('FEEDBACK_SENDER', null);
     }
 
     /**
@@ -232,7 +229,7 @@ class GlobalConfig extends DataObject {
      */
     public function getFeedbackEnvelopeSender()
     {
-        return $this->getConstant('FEEDBACK_ENVELOPE_SENDER', null);
+        return $this->getLiteral('FEEDBACK_ENVELOPE_SENDER', null);
     }
 
     /**
@@ -241,7 +238,7 @@ class GlobalConfig extends DataObject {
      */
     public function getLogCaughtExceptions()
     {
-        return $this->getConstant('LOG_CAUGHT_EXCEPTIONS', FALSE);
+        return $this->getBoolean('skosmos:logCaughtExceptions', FALSE);
     }
 
     /**
@@ -250,7 +247,7 @@ class GlobalConfig extends DataObject {
      */
     public function getLoggingBrowserConsole()
     {
-        return $this->getConstant('LOG_BROWSER_CONSOLE', FALSE);
+        return $this->getBoolean('skosmos:logBrowserConsole', FALSE);
     }
 
     /**
@@ -259,7 +256,7 @@ class GlobalConfig extends DataObject {
      */
     public function getLoggingFilename()
     {
-        return $this->getConstant('LOG_FILE_NAME', null);
+        return $this->getLiteral('skosmos:logFileName', null);
     }
 
     /**
@@ -267,15 +264,7 @@ class GlobalConfig extends DataObject {
      */
     public function getServiceName()
     {
-        return $this->getConstant('SERVICE_NAME', 'Skosmos');
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceTagline()
-    {
-        return $this->getConstant('SERVICE_TAGLINE', null);
+        return $this->getLiteral('skosmos:serviceName', 'Skosmos');
     }
 
     /**
@@ -283,7 +272,7 @@ class GlobalConfig extends DataObject {
      */
     public function getCustomCss()
     {
-        return $this->getConstant('CUSTOM_CSS', null);
+        return $this->getLiteral('skosmos:customCss', null);
     }
 
     /**
@@ -291,7 +280,7 @@ class GlobalConfig extends DataObject {
      */
     public function getUiLanguageDropdown()
     {
-        return $this->getConstant('UI_LANGUAGE_DROPDOWN', FALSE);
+        return $this->getBoolean('skosmos:uiLanguageDropdown', FALSE);
     }
 
     /**
@@ -299,7 +288,7 @@ class GlobalConfig extends DataObject {
      */
     public function getBaseHref()
     {
-        return $this->getConstant('BASE_HREF', null);
+        return $this->getLiteral('skosmos:baseHref', null);
     }
 
     /**
@@ -307,7 +296,7 @@ class GlobalConfig extends DataObject {
      */
     public function getGlobalPlugins()
     {
-        return explode(' ', $this->getConstant('GLOBAL_PLUGINS', null));
+        return explode(' ', $this->getLiteral('skosmos:globalPlugins', null));
     }
 
     /**
@@ -315,7 +304,7 @@ class GlobalConfig extends DataObject {
      */
     public function getHoneypotEnabled()
     {
-        return $this->getConstant('UI_HONEYPOT_ENABLED', TRUE);
+        return $this->getBoolean('skosmos:uiHoneypotEnabled', TRUE);
     }
 
     /**
@@ -323,7 +312,7 @@ class GlobalConfig extends DataObject {
      */
     public function getHoneypotTime()
     {
-        return $this->getConstant('UI_HONEYPOT_TIME', 5);
+        return $this->getLiteral('skosmos:uiHoneypotTime', 5);
     }
 
     /**
@@ -331,6 +320,6 @@ class GlobalConfig extends DataObject {
      */
     public function getCollationEnabled()
     {
-        return $this->getConstant('SPARQL_COLLATION_ENABLED', FALSE);
+        return $this->getBoolean('skosmos:sparqlCollationEnabled', FALSE);
     }
 }

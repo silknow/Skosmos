@@ -38,15 +38,6 @@ class GlobalConfigTest extends PHPUnit\Framework\TestCase
   }
 
   /**
-   * @covers GlobalConfig::getSparqlGraphStore
-   * @covers GlobalConfig::getConstant
-   */
-  public function testSparqlGraphDefaultValue() {
-    $actual = $this->config->getSparqlGraphStore();
-    $this->assertEquals(null, $actual);
-  }
-
-  /**
    * @covers GlobalConfig::getDefaultTransitiveLimit
    * @covers GlobalConfig::getConstant
    */
@@ -107,15 +98,6 @@ class GlobalConfigTest extends PHPUnit\Framework\TestCase
   public function testServiceNameDefaultValue() {
     $actual = $this->config->getServiceName();
     $this->assertEquals('Skosmos', $actual);
-  }
-
-  /**
-   * @covers GlobalConfig::getServiceTagline
-   * @covers GlobalConfig::getConstant
-   */
-  public function testgetServiceTaglineDefaultValue() {
-    $actual = $this->config->getServiceTagline();
-    $this->assertEquals(null, $actual);
   }
 
   /**
