@@ -18,16 +18,14 @@ class Model
     /** how long to store retrieved URI information in APC cache */
     const URI_FETCH_TTL = 86400; // 1 day
     private $globalConfig;
-    private $cache;
     private $logger;
 
     /**
      * Initializes the Model object
      */
-    public function __construct($config, $cache)
+    public function __construct($config)
     {
         $this->globalConfig = $config;
-        $this->cache = $cache;
         $this->initializeLogging();
     }
 
@@ -568,13 +566,13 @@ class Model
         $jsonld->setMimeTypes($mimetypes);
 
         // using apc cache for the resource if available
-        if ($this->cache->isAvailable()) {
+        if ($this->globalConfig->getCache()->isAvailable()) {
             // @codeCoverageIgnoreStart
             $key = 'fetch: ' . $uri;
-            $resource = $this->cache->fetch($key);
+            $resource = $this->globalConfig->getCache()->fetch($key);
             if ($resource === null || $resource === false) { // was not found in cache, or previous request failed
                 $resource = $this->fetchResourceFromUri($uri);
-                $this->cache->store($key, $resource, self::URI_FETCH_TTL);
+                $this->globalConfig->getCache()->store($key, $resource, self::URI_FETCH_TTL);
             }
             // @codeCoverageIgnoreEnd
         } else { // APC not available, parse on every request

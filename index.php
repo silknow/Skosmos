@@ -13,9 +13,8 @@ try {
     return;
 }
 
-$cache = new Cache();
-$config = new GlobalConfig($cache);
-$model = new Model($config, $cache);
+$config = new GlobalConfig();
+$model = new Model($config);
 $controller = new WebController($model);
 $request = new Request($model);
 

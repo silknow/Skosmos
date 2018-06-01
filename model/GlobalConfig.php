@@ -22,9 +22,9 @@ class GlobalConfig extends BaseConfig {
     /** Namespaces from vocabularies configuration file. */
     private $namespaces;
 
-    public function __construct($cache, $config_name='/../config.ttl')
+    public function __construct($config_name='/../config.ttl')
     {
-        $this->cache = $cache;
+        $this->cache = new Cache();
         try {
             $this->filePath = realpath( dirname(__FILE__) . $config_name );
             if (!file_exists($this->filePath)) {
