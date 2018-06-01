@@ -12,7 +12,7 @@ abstract class BaseConfig extends DataObject
      * @param string $property the property to query
      * @param boolean $default the default value if the value is not set in configuration
      */
-    private function getBoolean($property, $default = false)
+    protected function getBoolean($property, $default = false)
     {
         $val = $this->getResource()->getLiteral($property);
         if ($val) {
@@ -26,7 +26,7 @@ abstract class BaseConfig extends DataObject
      * @param string $property the property to query
      * @return string[] List of URIs
      */
-    private function getResources($property)
+    protected function getResources($property)
     {
         $resources = $this->getResource()->allResources($property);
         $ret = array();
@@ -42,7 +42,7 @@ abstract class BaseConfig extends DataObject
      * @param string $default default value
      * @param string $lang preferred language for the literal
      */
-    private function getLiteral($property, $default=null, $lang=null)
+    protected function getLiteral($property, $default=null, $lang=null)
     {
         if (!isset($lang)) {;
             $lang = $this->getEnvLang();

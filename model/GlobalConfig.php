@@ -28,8 +28,6 @@ class GlobalConfig extends BaseConfig {
                 throw new Exception("config.ttl must have exactly one skosmos:Configuration");
             }
             $this->resource = $configResources[0];
-            var_dump($this->getLanguages());die;
-            var_dump($configs);die;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
             return;
