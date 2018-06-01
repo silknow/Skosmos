@@ -15,9 +15,11 @@ EasyRdf\RdfNamespace::set('wdt', 'http://www.wikidata.org/prop/direct/');
  */
 class GlobalConfig extends BaseConfig {
 
+    /** Cache reference */
     private $cache;
+    /** Location of the configuration file. Used for caching. */
     private $filePath;
-    /** Namespaces from vocabularies configuration file */
+    /** Namespaces from vocabularies configuration file. */
     private $namespaces;
 
     public function __construct($cache, $config_name='/../config.ttl')
