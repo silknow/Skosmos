@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Setting some often needed namespace prefixes
+ */
 EasyRdf\RdfNamespace::set('skosmos', 'http://purl.org/net/skosmos#');
 EasyRdf\RdfNamespace::set('skosext', 'http://purl.org/finnonto/schema/skosext#');
 EasyRdf\RdfNamespace::set('isothes', 'http://purl.org/iso25964/skos-thes#');
@@ -12,26 +15,65 @@ EasyRdf\RdfNamespace::set('wdt', 'http://www.wikidata.org/prop/direct/');
  */
 class GlobalConfig extends BaseConfig {
 
-    public function __construct($config_name='/../config.ttl')
+    private $cache;
+    private $filePath;
+    /** Namespaces from vocabularies configuration file */
+    private $namespaces;
+
+    public function __construct($cache, $config_name='/../config.ttl')
     {
+        $this->cache = $cache;
         try {
-            $file_path = realpath( dirname(__FILE__) . $config_name );
-            if (!file_exists($file_path)) {
+            $this->filePath = realpath( dirname(__FILE__) . $config_name );
+            if (!file_exists($this->filePath)) {
                 throw new Exception('config.ttl file is missing, please provide one.');
             }
-            # EasyRDF appears to prepend the file location# to the nodes without a namespace
-            EasyRdf\RdfNamespace::set('emptyns', $file_path . '#');
-            $this->parseConfig($file_path);
+            $this->initializeConfig();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+            return;
+        }
+    }
+
+    /**
+     * Initialize configuration, reading the configuration file from the disk,
+     * and creating the graph and resources objects. Uses a cache if available,
+     * in order to avoid re-loading the complete configuration on each request.
+     */
+    private function initializeConfig()
+    {
+        try {
+            // use APC user cache to store parsed config.ttl configuration
+            if ($this->cache->isAvailable()) {
+                // @codeCoverageIgnoreStart
+                $key = realpath($this->filePath) . ", " . filemtime($this->filePath);
+                $nskey = "namespaces of " . $key;
+                $this->graph = $this->cache->fetch($key);
+                $this->namespaces = $this->cache->fetch($nskey);
+                if ($this->graph === false || $this->namespaces === false) { // was not found in cache
+                    # EasyRDF appears to prepend the file location# to the nodes without a namespace
+                    EasyRdf\RdfNamespace::set('emptyns', $this->filePath . '#');
+                    $this->parseConfig($this->filePath);
+                    $this->cache->store($key, $this->graph);
+                    $this->cache->store($nskey, $this->namespaces);
+                }
+                // @codeCoverageIgnoreEnd
+            } else { // APC not available, parse on every request
+                # EasyRDF appears to prepend the file location# to the nodes without a namespace
+                EasyRdf\RdfNamespace::set('emptyns', $this->filePath . '#');
+                $this->parseConfig($this->filePath);
+            }
 
             $configResources = $this->graph->allOfType("skosmos:Configuration");
             if (is_null($configResources) || !is_array($configResources) || count($configResources) !== 1) {
                 throw new Exception("config.ttl must have exactly one skosmos:Configuration");
             }
+
             $this->resource = $configResources[0];
+            $this->initializeNamespaces();
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
-            return;
-        }
+        }      
     }
 
     /**
@@ -47,13 +89,34 @@ class GlobalConfig extends BaseConfig {
     }
 
     /**
+     * Returns the graph created after parsing the configuration file.
+     * @return Graph
+     */
+    public function getGraph()
+    {
+        return $this->graph;
+    }
+
+    /**
+     * Registers RDF namespaces from the config.ttl file for use by EasyRdf (e.g. serializing)
+     */
+    private function initializeNamespaces() {
+        foreach ($this->namespaces as $prefix => $fullUri) {
+            if ($prefix != '' && EasyRdf\RdfNamespace::get($prefix) === null) // if not already defined
+            {
+                EasyRdf\RdfNamespace::set($prefix, $fullUri);
+            }
+        }
+    }
+
+    /**
      * Returns the UI languages specified in the configuration or defaults to
      * only show English
      * @return array
      */
     public function getLanguages()
     {
-        $languageResources = $this->resource->allResources('skosmos:languages');
+        $languageResources = $this->getResource()->allResources('skosmos:languages');
         if ($languageResources) {
             $languages = array();
             foreach ($languageResources as $idx => $languageResource) {
@@ -67,16 +130,6 @@ class GlobalConfig extends BaseConfig {
         } else {
             return array('en' => 'en_GB.utf8');
         }
-    }
-
-    /**
-     * Returns the vocabulary configuration file specified the configuration
-     * or vocabularies.ttl if not found.
-     * @return string
-     */
-    public function getVocabularyConfigFile()
-    {
-        return 'vocabularies.ttl';
     }
 
     /**

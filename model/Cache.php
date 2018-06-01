@@ -26,6 +26,6 @@ class Cache
     }
 
     public function isAvailable() {
-        return (function_exists('apcu_store') && function_exists('apcu_fetch'));
+        return (false && function_exists('apcu_store') && function_exists('apcu_fetch'));
     }
 }
