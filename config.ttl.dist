@@ -15,8 +15,6 @@
 
 # Skosmos main configuration
 
-# TODO: skosmos:globalPlugins
-
 :config a skosmos:Configuration ;
     # SPARQL endpoint
     # a local Fuseki server is usually on localhost:3030
@@ -62,8 +60,7 @@
     # whether to enable the spam honey pot or not, enabled by default
     skosmos:uiHoneypotEnabled true ;
     # default time a user must wait before submitting a form
-    skosmos:uiHoneypotTime 5
-.
+    skosmos:uiHoneypotTime 5 .
 
 # Skosmos vocabularies
 
