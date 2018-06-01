@@ -10,7 +10,7 @@ EasyRdf\RdfNamespace::set('wdt', 'http://www.wikidata.org/prop/direct/');
 /**
  * GlobalConfig provides access to the Skosmos configuration in config.ttl.
  */
-class GlobalConfig extends DataObject {
+class GlobalConfig extends BaseConfig {
 
     public function __construct($config_name='/../config.ttl')
     {
@@ -46,60 +46,6 @@ class GlobalConfig extends DataObject {
         $parser = new SkosmosTurtleParser();
         $parser->parse($this->graph, file_get_contents($filename), 'turtle', $filename);
         $this->namespaces = $parser->getNamespaces();
-    }
-
-        /**
-     * Returns a boolean value based on a literal value from the vocabularies.ttl configuration.
-     * @param string $property the property to query
-     * @param boolean $default the default value if the value is not set in configuration
-     */
-    private function getBoolean($property, $default = false)
-    {
-        $val = $this->resource->getLiteral($property);
-        if ($val) {
-            return filter_var($val->getValue(), FILTER_VALIDATE_BOOLEAN);
-        }
-        return $default;
-    }
-
-    /**
-     * Returns an array of URIs based on a property from the vocabularies.ttl configuration.
-     * @param string $property the property to query
-     * @return string[] List of URIs
-     */
-    private function getResources($property)
-    {
-        $resources = $this->resource->allResources($property);
-        $ret = array();
-        foreach ($resources as $res) {
-            $ret[] = $res->getURI();
-        }
-        return $ret;
-    }
-
-    /**
-     * Returns a boolean value based on a literal value from the vocabularies.ttl configuration.
-     * @param string $property the property to query
-     * @param string $default default value
-     * @param string $lang preferred language for the literal
-     */
-    private function getLiteral($property, $default=null, $lang=null)
-    {
-        if (!isset($lang)) {;
-            $lang = $this->getEnvLang();
-        }
-
-        $literal = $this->resource->getLiteral($property, $lang);
-        if ($literal) {
-            return $literal->getValue();
-        }
-
-        // not found with selected language, try any language
-        $literal = $this->resource->getLiteral($property);
-        if ($literal)
-          return $literal->getValue();
-
-        return $default;
     }
 
     /**
