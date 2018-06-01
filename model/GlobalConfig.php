@@ -37,6 +37,11 @@ class GlobalConfig extends BaseConfig {
         }
     }
 
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
     /**
      * Initialize configuration, reading the configuration file from the disk,
      * and creating the graph and resources objects. Uses a cache if available,
