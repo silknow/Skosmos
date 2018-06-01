@@ -5,14 +5,14 @@ class ConceptPropertyTest extends PHPUnit\Framework\TestCase
   private $model;
 
   protected function setUp() {
-    require_once 'testconfig.inc';
+    require_once 'testconfig.ttl';
     putenv("LC_ALL=en_GB.utf8");
     setlocale(LC_ALL, 'en_GB.utf8');
     bindtextdomain('skosmos', 'resource/translations');
     bind_textdomain_codeset('skosmos', 'UTF-8');
     textdomain('skosmos');
 
-    $this->model = new Model(new GlobalConfig('/../tests/testconfig.inc'));
+    $this->model = new Model(new GlobalConfig('/../tests/testconfig.ttl'));
   }
 
   /**
