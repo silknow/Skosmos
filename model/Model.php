@@ -372,7 +372,6 @@ class Model
     public function getVocabulariesInCategory($cat)
     {
         $vocs = $this->globalConfig->getGraph()->resourcesMatching('dc:subject', $cat);
-
         return $this->createDataObjects("Vocabulary", $vocs);
     }
 

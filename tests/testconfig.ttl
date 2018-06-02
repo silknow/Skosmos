@@ -24,24 +24,26 @@
     skosmos:sparqlEndpoint "http://localhost:13030/ds/sparql" ;
     # sparql-query extension, or "Generic" for plain SPARQL 1.1
     # set to "JenaText" instead if you use Fuseki with jena-text index
-    skosmos:sparqlDialect "JenaText" ;
+    skosmos:sparqlDialect "Generic" ;
     # whether to enable collation in sparql queries
     skosmos:sparqlCollationEnabled false ;
     # HTTP client configuration
     skosmos:sparqlTimeout 20 ;
-    skosmos:httpTimeout 20 ;
+    skosmos:httpTimeout 5 ;
     # customize the service name
     skosmos:serviceName "Skosmos" ;
     # customize the base element. Set this if the automatic base url detection doesn't work. For example setups behind a proxy.
-    skosmos:baseHref "http://localhost/Skosmos/" ;
+    # skosmos:baseHref "http://localhost/Skosmos/" ;
     # interface languages available, and the corresponding system locales
-    skosmos:languages [ :name "en" ; :value "en_GB.utf8" ] ;
+    skosmos:languages [ :name "fi" ; :value "fi_FI.utf8" ] ,
+                [ :name "sv" ; :value "sv_SE.utf8" ] ,
+                [ :name "en" ; :value "en_GB.utf8" ] ;
     # how many results (maximum) to load at a time on the search results page
     skosmos:searchResultsSize 20 ;
     # how many items (maximum) to retrieve in transitive property queries
     skosmos:transitiveLimit 1000 ;
     # whether or not to log caught exceptions
-    skosmos:logCaughtExceptions true ;
+    skosmos:logCaughtExceptions false ;
     # set to TRUE to enable logging into browser console
     skosmos:logBrowserConsole false ;
     # set to a logfile path to enable logging into log file
@@ -49,7 +51,7 @@
     # a default location for Twig template rendering
     skosmos:templateCache "/tmp/skosmos-template-cache" ;
     # customize the css by adding your own stylesheet
-    skosmos:customCss "resource/css/stylesheet.css" ;
+    # skosmos:customCss "resource/css/stylesheet.css" ;
     # default email address where to send the feedback
     skosmos:feedbackAddress "" ;
     # email address to set as the sender for feedback messages

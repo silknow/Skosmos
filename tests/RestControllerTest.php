@@ -8,7 +8,6 @@ require_once('controller/RestController.php');
 class RestControllerTest extends \PHPUnit\Framework\TestCase
 {
   protected function setUp() {
-    require_once 'testconfig.ttl';
     putenv("LC_ALL=en_GB.utf8");
     setlocale(LC_ALL, 'en_GB.utf8');
     bindtextdomain('skosmos', 'resource/translations');
