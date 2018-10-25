@@ -637,6 +637,8 @@ class RestController extends Controller
             return $this->returnError(400, 'Bad Request', "uri parameter missing");
         }
 
+        $queryExVocabs = $request->getQueryParamBoolean('external', true);
+
         $results = $vocab->getConceptInfo($uri, $request->getContentLang());
         if (empty($results)) {
             return $this->returnError(404, 'Bad Request', "no concept found with given uri");
@@ -647,7 +649,7 @@ class RestController extends Controller
         $ret = [];
         foreach ($concept->getMappingProperties() as $mappingProperty) {
             foreach ($mappingProperty->getValues() as $mappingPropertyValue) {
-                $ret[] = $mappingPropertyValue->asJskos();
+                $ret[] = $mappingPropertyValue->asJskos($queryExVocabs);
             }
         }
 
