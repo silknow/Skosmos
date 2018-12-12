@@ -3,7 +3,6 @@
 class PluginRegisterTest extends PHPUnit\Framework\TestCase
 {
   private $model;
-  private $concept;
   private $mockpr;
 
   protected function setUp() {
