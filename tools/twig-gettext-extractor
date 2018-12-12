@@ -41,7 +41,7 @@ $twig->addExtension(new Symfony\Bridge\Twig\Extension\RoutingExtension(
     new Twig\Gettext\Routing\Generator\UrlGenerator()
 ));
 $twig->addExtension(new Symfony\Bridge\Twig\Extension\FormExtension(
-    new Symfony\Bridge\Twig\Form\TwigRenderer(
+    new Symfony\Component\Form\FormRenderer(
         new Symfony\Bridge\Twig\Form\TwigRendererEngine()
     )
 ));
