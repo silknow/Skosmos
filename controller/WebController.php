@@ -185,7 +185,7 @@ class WebController extends Controller
         // set language parameters for gettext
         $this->setLanguageProperties($request->getLang());
         // load template
-        $template = $this->twig->loadTemplate('light.twig');
+        $template = $this->twig->load('light.twig');
         // set template variables
         $categoryLabel = $this->model->getClassificationLabel($request->getLang());
         $sortedVocabs = $this->model->getVocabularyList(false, true);
@@ -221,7 +221,7 @@ class WebController extends Controller
             $this->invokeGenericErrorPage($request);
             return;
         }
-        $template = (in_array('skos:Concept', $results[0]->getType()) || in_array('skos:ConceptScheme', $results[0]->getType())) ? $this->twig->loadTemplate('concept-info.twig') : $this->twig->loadTemplate('group-contents.twig');
+        $template = (in_array('skos:Concept', $results[0]->getType()) || in_array('skos:ConceptScheme', $results[0]->getType())) ? $this->twig->load('concept-info.twig') : $this->twig->load('group-contents.twig');
 
         $crumbs = $vocab->getBreadCrumbs($request->getContentLang(), $uri);
         echo $template->render(array(
@@ -240,7 +240,7 @@ class WebController extends Controller
      */
     public function invokeFeedbackForm($request)
     {
-        $template = $this->twig->loadTemplate('feedback.twig');
+        $template = $this->twig->load('feedback.twig');
         $this->setLanguageProperties($request->getLang());
         $vocabList = $this->model->getVocabularyList(false);
         $vocab = $request->getVocab();
@@ -328,7 +328,7 @@ class WebController extends Controller
             mail($toAddress, $subject, $message, $headers, $params);
         } catch (Exception $e) {
             header("HTTP/1.0 404 Not Found");
-            $template = $this->twig->loadTemplate('error-page.twig');
+            $template = $this->twig->load('error-page.twig');
             if ($this->model->getConfig()->getLogCaughtExceptions()) {
                 error_log('Caught exception: ' . $e->getMessage());
             }
@@ -347,7 +347,7 @@ class WebController extends Controller
      */
     public function invokeAboutPage($request)
     {
-        $template = $this->twig->loadTemplate('about.twig');
+        $template = $this->twig->load('about.twig');
         $this->setLanguageProperties($request->getLang());
         $url = $request->getServerConstant('HTTP_HOST');
         $version = $this->model->getVersion();
@@ -367,7 +367,7 @@ class WebController extends Controller
     public function invokeGlobalSearch($request)
     {
         $lang = $request->getLang();
-        $template = $this->twig->loadTemplate('vocab-search-listing.twig');
+        $template = $this->twig->load('vocab-search-listing.twig');
         $this->setLanguageProperties($lang);
 
         $parameters = new ConceptSearchParameters($request, $this->model->getConfig());
@@ -421,7 +421,7 @@ class WebController extends Controller
      */
     public function invokeVocabularySearch($request)
     {
-        $template = $this->twig->loadTemplate('vocab-search-listing.twig');
+        $template = $this->twig->load('vocab-search-listing.twig');
         $this->setLanguageProperties($request->getLang());
         $vocab = $request->getVocab();
         try {
@@ -488,7 +488,7 @@ class WebController extends Controller
     {
         $lang = $request->getLang();
         $this->setLanguageProperties($lang);
-        $template = $this->twig->loadTemplate('alphabetical-index.twig');
+        $template = $this->twig->load('alphabetical-index.twig');
         $vocab = $request->getVocab();
 
         $offset = ($request->getQueryParam('offset') && is_numeric($request->getQueryParam('offset')) && $request->getQueryParam('offset') >= 0) ? $request->getQueryParam('offset') : 0;
@@ -534,7 +534,7 @@ class WebController extends Controller
     {
         $lang = $request->getLang();
         $this->setLanguageProperties($lang);
-        $template = $this->twig->loadTemplate('group-index.twig');
+        $template = $this->twig->load('group-index.twig');
         $vocab = $request->getVocab();
 
         echo $template->render(
@@ -563,7 +563,7 @@ class WebController extends Controller
             return;
         }
 
-        $template = $this->twig->loadTemplate('vocab.twig');
+        $template = $this->twig->load('vocab.twig');
 
         echo $template->render(
             array(
@@ -582,7 +582,7 @@ class WebController extends Controller
     {
         $this->setLanguageProperties($request->getLang());
         header("HTTP/1.0 404 Not Found");
-        $template = $this->twig->loadTemplate('error-page.twig');
+        $template = $this->twig->load('error-page.twig');
         echo $template->render(
             array(
                 'languages' => $this->languages,
@@ -604,7 +604,7 @@ class WebController extends Controller
         $offset = ($request->getQueryParam('offset') && is_numeric($request->getQueryParam('offset')) && $request->getQueryParam('offset') >= 0) ? $request->getQueryParam('offset') : 0;
         $changeList = $vocab->getChangeList($prop, $request->getContentLang(), $request->getLang(), $offset);
         // load template
-        $template = $this->twig->loadTemplate('changes.twig');
+        $template = $this->twig->load('changes.twig');
 
         // render template
         echo $template->render(
