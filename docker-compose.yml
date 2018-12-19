@@ -15,6 +15,8 @@ services:
   #  - ${PWD}/fuseki:/fuseki
   web:
     container_name: skosmos
+    environment:
+      XDEBUG_CONFIG: remote_host=172.18.0.1
     build: .
     volumes:
       - .:/var/www/html
