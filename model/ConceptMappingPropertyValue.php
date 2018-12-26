@@ -23,7 +23,7 @@ class ConceptMappingPropertyValue extends VocabularyDataObject
      * @param string $prop       Mapping property
      * @param ?string $clang     Preferred label language (nullable)
      */
-    public function __construct(Model $model, Vocabulary $vocab, Resource $target, Resource $source, string $prop, $clang = '')
+    public function __construct(Model $model, Vocabulary $vocab, Resource $target, Resource $source = null, string $prop, $clang = '')
     {
         parent::__construct($model, $vocab, $target);
         $this->source = $source;
@@ -210,7 +210,7 @@ class ConceptMappingPropertyValue extends VocabularyDataObject
             $ret['to']['memberSet'][0]['notation'] = (string) $notation;
         }
 
-        $label = $this->getLabel($queryExVocabs);
+        $label = $this->getLabel(null, $queryExVocabs);
         if (isset($label)) {
             if (is_string($label)) {
                 list($labelLang, $labelValue) = ['-', $label];
