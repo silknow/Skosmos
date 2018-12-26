@@ -631,9 +631,8 @@ class RestController extends Controller
     {
         $vocab = $request->getVocab();
 
-        if ($request->getUri()) {
-            $uri = $request->getUri();
-        } else {
+        $uri = $request->getUri();
+        if (!$uri) {
             return $this->returnError(400, 'Bad Request', "uri parameter missing");
         }
 
@@ -649,7 +648,7 @@ class RestController extends Controller
         $ret = [];
         foreach ($concept->getMappingProperties() as $mappingProperty) {
             foreach ($mappingProperty->getValues() as $mappingPropertyValue) {
-                $ret[] = $mappingPropertyValue->asJskos($queryExVocabs);
+                $ret[] = $mappingPropertyValue->asJskos($queryExVocabs, $request->getLang(), $request->getContentLang());
             }
         }
 
