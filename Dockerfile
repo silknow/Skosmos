@@ -11,6 +11,7 @@ RUN echo "sv_SE.UTF-8 UTF-8" >> /etc/locale.gen
 RUN locale-gen
 
 RUN yes | pecl install xdebug && docker-php-ext-enable xdebug \
+      && echo -n "no" | pecl install apcu && docker-php-ext-enable apcu \
       && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" >> /usr/local/etc/php/php.ini  \
       && echo "xdebug.remote_port=9000" >> /usr/local/etc/php/php.ini \
       && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/php.ini \
