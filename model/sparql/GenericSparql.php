@@ -58,7 +58,7 @@ class GenericSparql {
         }
 
     }
-    
+
     /**
      * Returns prefix-definitions for a query
      *
@@ -100,10 +100,10 @@ class GenericSparql {
         }
         return $result;
     }
-    
-    
+
+
     /**
-     * Generates FROM clauses for the queries 
+     * Generates FROM clauses for the queries
      * @param Vocabulary[]|null $vocabs
      * @return string
      */
@@ -121,7 +121,7 @@ class GenericSparql {
         }
         foreach ($graphs as $graph) {
             if($graph !== NULL)
-                $clause .= "FROM NAMED <$graph> "; 
+                $clause .= "FROM NAMED <$graph> ";
         }
         return $clause;
     }
@@ -162,7 +162,7 @@ class GenericSparql {
     public function getGraph() {
         return $this->graph;
     }
-    
+
     /**
      * Shorten a URI
      * @param string $uri URI to shorten
@@ -277,7 +277,7 @@ EOQ;
         }
         foreach ($result as $row) {
             if (isset($row->lang) && isset($row->prop) && isset($row->count)) {
-                $ret[$row->lang->getValue()][$row->prop->shorten()] += 
+                $ret[$row->lang->getValue()][$row->prop->shorten()] +=
                 $row->count->getValue();
             }
 
@@ -434,7 +434,7 @@ CONSTRUCT {
      UNION
      { ?o rdfs:label ?ol . }
      UNION
-     { ?o rdf:value ?ov . 
+     { ?o rdf:value ?ov .
        OPTIONAL { ?o ?oprop ?oval . }
      }
      UNION
@@ -637,7 +637,7 @@ WHERE {
    { ?cs dc:title ?title }
    FILTER(langMatches(lang(?title), '$lang'))
  }
-} 
+}
 ORDER BY ?cs
 EOQ;
         return $query;
@@ -687,7 +687,7 @@ EOQ;
 
     /**
      * Generate a VALUES clause for limiting the targeted graphs.
-     * @param Vocabulary[]|null $vocabs the vocabularies to target 
+     * @param Vocabulary[]|null $vocabs the vocabularies to target
      * @return string[] array of graph URIs
      */
     protected function getVocabGraphs($vocabs) {
@@ -787,7 +787,7 @@ EOQ;
 EOV;
         return $clause;
     }
-    
+
     /**
      * @return string sparql query clause
      */
@@ -812,7 +812,7 @@ EOV;
         $ret = array('extravars' => '', 'extrafields' => '');
 
         if ($fields === null) {
-            return $ret; 
+            return $ret;
         }
 
         if (in_array('prefLabel', $fields)) {
@@ -872,7 +872,7 @@ EOF;
         }
 
         $labelcondMatch = ($searchLang) ? "&& LANGMATCHES(lang(?match), '$searchLang')" : "";
-        
+
         return "?s ?prop ?match . FILTER ($filtercond $labelcondMatch)";
     }
 
@@ -902,7 +902,7 @@ EOF;
         $labelcondFallback = ($searchLang != $lang) ?
           "OPTIONAL { # in case previous OPTIONAL block gives no labels\n" .
           "?s skos:prefLabel ?label . FILTER (LANGMATCHES(LANG(?label), LANG(?match))) }" : "";
-          
+
         //  Including the labels if there is no query term given.
         if ($rawterm === '') {
           $labelClause = "?s skos:prefLabel ?label .";
@@ -921,12 +921,12 @@ EOF;
          */
         $hitvar = $unique ? '(MIN(?matchstr) AS ?hit)' : '(?matchstr AS ?hit)';
         $hitgroup = $unique ? 'GROUP BY ?s ?label ?notation' : '';
-         
+
         $query = <<<EOQ
    SELECT DISTINCT ?s ?label ?notation $hitvar
    WHERE {
     $graphClause {
-     { 
+     {
      $valuesProp
      VALUES (?prop ?pri) { (skos:prefLabel 1) (skos:altLabel 3) (skos:hiddenLabel 5)}
      $textcond
@@ -954,7 +954,7 @@ EOQ;
      * @param array|null $fields extra fields to include in the result (array of strings). (default: null = none)
      * @param boolean $unique restrict results to unique concepts (default: false)
      * @param boolean $showDeprecated whether to include deprecated concepts in search results (default: false)
-     * @param ConceptSearchParameters $params 
+     * @param ConceptSearchParameters $params
      * @return string sparql query
      */
     protected function generateConceptSearchQuery($fields, $unique, $params, $showDeprecated = false) {
@@ -1011,11 +1011,11 @@ EOQ;
   BIND(IF((?pri = "5" || ?pri = "6"), ?match, ?unbound) as ?hlabel)
 EOQ;
         $innerquery = $this->generateConceptSearchQueryInner($params->getSearchTerm(), $params->getLang(), $params->getSearchLang(), $props, $unique, $filterGraph);
-        if ($params->getSearchTerm() === '*' || $params->getSearchTerm() === '') { 
-          $labelpriority = ''; 
+        if ($params->getSearchTerm() === '*' || $params->getSearchTerm() === '') {
+          $labelpriority = '';
         }
         $query = <<<EOQ
-SELECT DISTINCT ?s ?label ?plabel ?alabel ?hlabel ?graph ?notation (GROUP_CONCAT(DISTINCT STR(?type);separator=' ') as ?types) $extravars 
+SELECT DISTINCT ?s ?label ?plabel ?alabel ?hlabel ?graph ?notation (GROUP_CONCAT(DISTINCT STR(?type);separator=' ') as ?types) $extravars
 $fcl
 WHERE {
  $gcl {
@@ -1024,7 +1024,7 @@ WHERE {
   }
   $labelpriority
   $formattedtype
-  { $pgcond 
+  { $pgcond
    ?s a ?type .
    $extrafields $schemecond
   }
@@ -1080,7 +1080,7 @@ EOQ;
             }
         }
 
-        
+
         if (isset($row->preflabels)) {
             foreach (explode("\n", $row->preflabels->getValue()) as $line) {
                 $pref = str_getcsv($line, ',', '"', '"');
@@ -1146,7 +1146,7 @@ EOQ;
      * @param array $fields extra fields to include in the result (array of strings). (default: null = none)
      * @param boolean $unique restrict results to unique concepts (default: false)
      * @param boolean $showDeprecated whether to include deprecated concepts in the result (default: false)
-     * @param ConceptSearchParameters $params 
+     * @param ConceptSearchParameters $params
      * @return array query result object
      */
     public function queryConcepts($vocabs, $fields = null, $unique = false, $params, $showDeprecated = false) {
@@ -1392,7 +1392,7 @@ EOQ;
             return null;
         }
     }
-    
+
     /**
      * Generates a SPARQL query to retrieve the super properties of a given property URI.
      * Note this must be executed in the graph where this information is available.
@@ -1409,7 +1409,7 @@ WHERE {
 EOQ;
         return $query;
     }
-    
+
     /**
      * Query the super properties of a provided property URI.
      * @param string $uri URI of a propertyes
@@ -1423,9 +1423,9 @@ EOQ;
             if (isset($row->superProperty)) {
                 $ret[] = $row->superProperty->getUri();
             }
-            
+
         }
-        
+
         if (sizeof($ret) > 0) {
             // return result
             return $ret;
@@ -1809,7 +1809,6 @@ EOQ;
 
     /**
      * Generates a sparql query for finding the hierarchy for a concept.
-	 * A concept may be a top concept in multiple schemes, returned as a single whitespace-separated literal.
      * @param string $uri concept uri.
      * @param string $lang
      * @param string $fallback language to use if label is not available in the preferred language
@@ -1819,50 +1818,32 @@ EOQ;
         $fcl = $this->generateFromClause();
         $propertyClause = implode('|', $props);
         $query = <<<EOQ
-SELECT ?broad ?parent ?children ?grandchildren
-(SAMPLE(?lab) as ?label) (SAMPLE(?childlab) as ?childlabel) (GROUP_CONCAT(?topcs; separator=" ") as ?tops) 
-(SAMPLE(?nota) as ?notation) (SAMPLE(?childnota) as ?childnotation) $fcl
+SELECT DISTINCT
+?broad ?parent ?children ?grandchildren
+(SAMPLE(?lab) as ?label) (SAMPLE(?childlab) as ?childlabel) (SAMPLE(?topcs) AS ?top) (SAMPLE(?nota) as ?notation) (SAMPLE(?childnota) as ?childnotation)
+$fcl
 WHERE {
   <$uri> a skos:Concept .
   OPTIONAL {
     <$uri> $propertyClause* ?broad .
+	?broad skos:prefLabel ?lab .
+	FILTER (langMatches(lang(?lab), "$lang"))
+    OPTIONAL { ?broad skos:notation ?nota }
+    OPTIONAL { ?broad $propertyClause ?parent }
+
     OPTIONAL {
-      ?broad skos:prefLabel ?lab .
-      FILTER (langMatches(lang(?lab), "$lang"))
-    }
-    OPTIONAL {
-      ?broad skos:prefLabel ?lab .
-      FILTER (langMatches(lang(?lab), "$fallback"))
-    }
-    OPTIONAL { # fallback - other language case
-      ?broad skos:prefLabel ?lab .
-    }
-    OPTIONAL { ?broad skos:notation ?nota . }
-    OPTIONAL { ?broad $propertyClause ?parent . }
-    OPTIONAL { ?broad skos:narrower ?children .
-      OPTIONAL {
-        ?children skos:prefLabel ?childlab .
-        FILTER (langMatches(lang(?childlab), "$lang"))
-      }
-      OPTIONAL {
-        ?children skos:prefLabel ?childlab .
-        FILTER (langMatches(lang(?childlab), "$fallback"))
-      }
-      OPTIONAL { # fallback - other language case
-        ?children skos:prefLabel ?childlab .
-      }
-      OPTIONAL {
-        ?children skos:notation ?childnota .
-      }
+      ?broad skos:narrower ?children .
+	  ?children skos:prefLabel ?childlab .
+	  FILTER (langMatches(lang(?childlab), "$lang"))
+	  OPTIONAL { ?children skos:notation ?childnota }
     }
     BIND ( EXISTS { ?children skos:narrower ?a . } AS ?grandchildren )
     OPTIONAL { ?broad skos:topConceptOf ?topcs . }
   }
 }
-GROUP BY ?broad ?parent ?member ?children ?grandchildren
+GROUP BY ?broad ?parent ?children ?grandchildren
 EOQ;
-        return $query;
-    }
+        return $query;    }
 
     /**
      * Transforms the result into an array.

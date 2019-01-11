@@ -418,7 +418,7 @@ class VocabularyConfig extends BaseConfig
         foreach ($resources as $res) {
             $prop = $res->getURI();
             $label = $res->label($lang) ? $res->label($lang) : $res->label($this->getDefaultLanguage());
-            $ret[] = array('uri' => $prop, 'prefLabel' =>  $label->getValue());
+            $ret[] = array('uri' => $prop, 'prefLabel' =>  (is_null($label)?$prop:$label->getValue()));
         }
         return $ret;
     }
