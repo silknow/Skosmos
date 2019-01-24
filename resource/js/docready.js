@@ -488,13 +488,13 @@ $(function() { // DOCUMENT READY
     position: { my: 'top left', at: 'bottom center' },
     style: { classes: 'qtip-tipsy qtip-skosmos' }
   };
-  
+
   $('#navi4').qtip(qtip_skosmos);
 
   $('.property-click').qtip(qtip_skosmos);
 
   $('.redirected-vocab-id').qtip(qtip_skosmos);
-  
+
   $('.reified-property-value').each(function() {
     $(this).qtip({
       content: $(this).next('.reified-tooltip'),
@@ -683,10 +683,10 @@ $(function() { // DOCUMENT READY
               var vocabLabel = $('select.multiselect').children('[value="' + voc + '"]').attr('data-label');
               item.vocabLabel = (vocabLabel) ? vocabLabel : voc;
             }
-            item.label = item.prefLabel;
+            item.label = escapeHtml(item.prefLabel);
             // combining all the matched properties.
-            if (item.matchedPrefLabel) { item.label = item.matchedPrefLabel; }
-            if (item.altLabel) { item.replaced = item.altLabel; }
+            if (item.matchedPrefLabel) { item.label = escapeHtml(item.matchedPrefLabel); }
+            if (item.altLabel) { item.replaced = escapeHtml(item.altLabel); }
             // not showing hiddenLabel matches when there are better matches to show for the same concept
             if (item.hiddenLabel && hasNonHiddenMatch[item.uri]) { return null; }
             // do not show the label language when it's same or in the same subset as the ui language.

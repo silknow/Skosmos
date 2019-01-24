@@ -21,11 +21,12 @@
     skosmos:sparqlCollationEnabled true ;
     skosmos:sparqlTimeout 20 ;
     skosmos:httpTimeout 5 ;
-    skosmos:serviceName "SilkNOW" ;
+    skosmos:serviceName "SILKNOW" ;
     skosmos:languages (
         [ rdfs:label "es" ; rdf:value "es_ES.utf8" ]
         [ rdfs:label "en" ; rdf:value "en_GB.utf8" ]
     ) ;
+    skosmos:baseHref "http://skosmos.silknow.org/";
     skosmos:searchResultsSize 20 ;
     skosmos:transitiveLimit 1000 ;
     skosmos:logCaughtExceptions true ;
@@ -71,6 +72,7 @@
     skosmos:showNotation "true" ;
     skosmos:loadExternalResources "true" ;
     skosmos:groupClass skos:Collection ;
+    skosmos:showTopConcepts "true" ;
     skosmos:mainConceptScheme <http://vocab.getty.edu/aat/> ;
     void:sparqlEndpoint <http://data.silknow.org/sparql> ;
     void:dataDump <http://vocab.getty.edu/aat.ttl> ;
