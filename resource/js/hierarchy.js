@@ -1,14 +1,14 @@
-var treeIndex = {}; 
+var treeIndex = {};
 var urlToUri = {};
-var hierTreeConf ={ 
+var hierTreeConf ={
   alwaysShowScrollbar: 1,
-  scrollInertia: 0, 
+  scrollInertia: 0,
   mouseWheel:{ scrollAmount: 105 },
   snapAmount: 18,
   snapOffset: 1
 };
 
-/* 
+/*
  * For legacy browsers that don't natively support Object.size().
  * @param {Object} obj
  */
@@ -28,7 +28,7 @@ function setNode(node) { treeIndex[node.uri] = node; storeUri(node); }
 
 function storeUri(node) { urlToUri[node.a_attr.href] = node.uri; }
 
-/* 
+/*
  * Forces node to open when it's clicked.
  * @param {Object} tree
  */
@@ -48,7 +48,7 @@ function invokeParentTree(tree) {
     }
   });
 }
-  
+
 function getLeafOffset() {
   var containerHeight = $('.sidebar-grey').height();
   var conceptCount = Math.floor((containerHeight * 0.66) / 18);
@@ -68,6 +68,7 @@ function getLabel(object) {
   if (window.showNotation && object.notation) {
     return '<span class="tree-notation">' + object.notation + '</span> ' + object[labelProp];
   }
+  console.log(escapeHtml(object[labelProp]))
   return escapeHtml(object[labelProp]);
 }
 
@@ -75,7 +76,7 @@ function createObjectsFromChildren(conceptData, conceptUri) {
   var childArray = [];
   for (var i = 0; i < conceptData.narrower.length; i++) {
     var childObject = {
-      text: getLabel(conceptData.narrower[i]), 
+      text: getLabel(conceptData.narrower[i]),
       a_attr: getConceptHref(conceptData.narrower[i]),
       uri: conceptData.narrower[i].uri,
       parents: conceptUri,
@@ -99,8 +100,8 @@ function createObjectsFromChildren(conceptData, conceptUri) {
  * @param
  */
 function createConceptObject(conceptUri, conceptData) {
-  var newNode = { 
-    text: getLabel(conceptData), 
+  var newNode = {
+    text: getLabel(conceptData),
     a_attr: getConceptHref(conceptData),
     uri: conceptUri,
     parents: conceptData.broader,
@@ -114,18 +115,18 @@ function createConceptObject(conceptUri, conceptData) {
   }
   // if we are at a concept page we want to highlight that node and mark it as to be initially opened.
   if (newNode.uri === window.uri) { newNode.li_attr = { class: 'jstree-leaf-proper' }; }
-  if (conceptData.narrower) { // filtering out the ones that don't have labels 
+  if (conceptData.narrower) { // filtering out the ones that don't have labels
     newNode.children = createObjectsFromChildren(conceptData, conceptUri);
   }
-  
+
   return newNode;
 }
 
 /*
  * For building a parent hierarchy tree from the leaf concept to the ontology/vocabulary root.
- * @param {Object} schemes 
- * @param {Object} currentNode 
- * @param {Object} parentData 
+ * @param {Object} schemes
+ * @param {Object} currentNode
+ * @param {Object} parentData
  */
 function attachTopConceptsToSchemes(schemes, currentNode, parentData) {
   for (var i = 0; i < schemes.length; i++) {
@@ -134,7 +135,7 @@ function attachTopConceptsToSchemes(schemes, currentNode, parentData) {
         schemes[i].children = [];
       }
       schemes[i].children.push(currentNode);
-      // the hierarchy response contains the parent info before the topConcepts so it's a safe to open the first one without broaders 
+      // the hierarchy response contains the parent info before the topConcepts so it's a safe to open the first one without broaders
       if (!schemes.opened && !currentNode.broader) {
         schemes[i].state = currentNode.state;
       }
@@ -147,7 +148,7 @@ function attachTopConceptsToSchemes(schemes, currentNode, parentData) {
  * For building a parent hierarchy tree from the leaf concept to the ontology/vocabulary root.
  * @param {String} uri
  * @param {Object} parentData
- * @param {Object} schemes 
+ * @param {Object} schemes
  */
 function buildParentTree(uri, parentData, schemes) {
   if (parentData === undefined || parentData === null) { return; }
@@ -158,14 +159,14 @@ function buildParentTree(uri, parentData, schemes) {
 
   for(var conceptUri in parentData) {
     if (parentData.hasOwnProperty(conceptUri)) {
-      var branchHelper, 
+      var branchHelper,
         exactMatchFound;
       currentNode = createConceptObject(conceptUri, parentData[conceptUri]);
-      /* if a node has the property topConceptOf set it as the root node. 
-       * Or just setting the last node as a root if nothing else has been found 
+      /* if a node has the property topConceptOf set it as the root node.
+       * Or just setting the last node as a root if nothing else has been found
        */
-      if (parentData[conceptUri].top || ( loopIndex === Object.size(parentData)-1) && rootArray.length === 0 || !currentNode.parents && rootArray.length === 0) { 
-        if (rootArray.length === 0) {  
+      if (parentData[conceptUri].top || ( loopIndex === Object.size(parentData)-1) && rootArray.length === 0 || !currentNode.parents && rootArray.length === 0) {
+        if (rootArray.length === 0) {
           branchHelper = currentNode;
         }
         // if there are multiple concept schemes attach the topConcepts to the concept schemes
@@ -177,14 +178,14 @@ function buildParentTree(uri, parentData, schemes) {
         }
       }
       if (exactMatchFound) { // combining branches if we have met a exact match during the previous iteration.
-        currentNode.children.push(branchHelper); 
+        currentNode.children.push(branchHelper);
         branchHelper = undefined;
         exactMatchFound = false;
       }
       // here we have iterated far enough to find the merging point of the trees.
       if (branchHelper && parentData[branchHelper.uri].exact === currentNode.uri) {
         exactMatchFound = true;
-      } 
+      }
       setNode(currentNode);
       loopIndex++;
     }
@@ -215,10 +216,10 @@ function vocabRoot(topConcepts) {
   for (var i = 0; i < topConcepts.length; i++) {
     var conceptData = topConcepts[i];
     var childObject = {
-      text: conceptData.label, 
+      text: escapeHtml(conceptData.label),
       a_attr : getConceptHref(conceptData),
       uri: conceptData.uri,
-      state: { opened: false } 
+      state: { opened: false }
     };
     if (conceptData.hasChildren)
       childObject.children = true;
@@ -242,7 +243,7 @@ function appendChildrenToParents() {
           var parentNode = getNode(current.parents[i]);
           if (parentNode && parentNode !== current && $.inArray(current, parentNode.children) === -1) {
             for(var j = 0; j < parentNode.children.length; j++) {
-              if(parentNode.children[j].uri === current.uri){ 
+              if(parentNode.children[j].uri === current.uri){
                 // if the concept has already been found enrich the previous one with the additional information.
                 parentNode.children[j].children = current.children;
                 parentNode.children[j].state = current.state;
@@ -261,7 +262,7 @@ function createObjectsFromNarrowers(narrowerResponse) {
   for (var i = 0; i < narrowerResponse.narrower.length; i++) {
     var conceptObject = narrowerResponse.narrower[i];
     var childObject = {
-      text : getLabel(conceptObject), 
+      text : getLabel(conceptObject),
       a_attr : getConceptHref(conceptObject),
       uri: conceptObject.uri,
       parents: narrowerResponse.uri,
@@ -298,11 +299,11 @@ function schemeRoot(schemes) {
     var label = pickLabelFromScheme(scheme);
     if (label !== '') { // hiding schemes without a label/title
       var schemeObject = {
-        text: label, 
+        text: label,
         a_attr : { "href" : vocab + '/' + lang + '/page/?uri=' + scheme.uri, 'class': 'scheme'},
         uri: scheme.uri,
         children: true,
-        state: { opened: false } 
+        state: { opened: false }
       };
       topArray.push(schemeObject);
     }
@@ -328,9 +329,9 @@ function topConceptsToSchemes(topConcepts, schemes) {
   var childArray = schemes.length > 1 ? schemes : [];
   for (var i in topConcepts) {
     var topConcept = topConcepts[i];
-    var hasChildren = topConcept.hasChildren; 
+    var hasChildren = topConcept.hasChildren;
     var childObject = {
-      text : getLabel(topConcept), 
+      text : getLabel(topConcept),
       a_attr : { "href" : vocab + '/' + lang + '/page/?uri=' + encodeURIComponent(topConcept.uri) },
       uri: topConcept.uri,
       state: { opened: false, disabled: false, selected: false }
@@ -349,21 +350,21 @@ function topConceptsToSchemes(topConcepts, schemes) {
   return childArray;
 }
 
-/* 
+/*
  * Gives you the Skosmos default jsTree configuration.
  */
 function getTreeConfiguration() {
-  $('.sidebar-grey').empty().jstree({ 
+  $('.sidebar-grey').empty().jstree({
     'core' : {
       'animation' : 0,
       'themes' : { 'icons': false },
       'strings' : { 'Loading ...' : jstree_loading },
-      'data' : 
-        function(node, cb) { 
+      'data' :
+        function(node, cb) {
           var clang = content_lang !== '' ? content_lang : lang;
           var json_url = (rest_base_url + vocab + '/hierarchy');
           var nodeId;
-          var params = getParams(node); 
+          var params = getParams(node);
           var schemeObjects;
           $.ajax({
             data: $.param({'lang': clang}),
@@ -373,12 +374,12 @@ function getTreeConfiguration() {
               // if there are multiple concept schemes display those at the top level
               if (schemeObjects.length > 1 && node.id === '#' && $('#vocab-info').length) {
                 return cb(schemeObjects);
-              } 
-              // if there was only one concept scheme display it's top concepts at the top level 
-              else if(node.id === '#' && $('#vocab-info').length) { 
+              }
+              // if there was only one concept scheme display it's top concepts at the top level
+              else if(node.id === '#' && $('#vocab-info').length) {
                 $.ajax({
                   data: $.param({'lang': clang}),
-                  url: rest_base_url + vocab + '/topConcepts', 
+                  url: rest_base_url + vocab + '/topConcepts',
                   success: function (response) {
                     return cb(vocabRoot(response.topconcepts));
                   }
@@ -390,18 +391,18 @@ function getTreeConfiguration() {
                   json_url = (rest_base_url + vocab + '/topConcepts');
                   params = $.param({'scheme': node.original.uri, 'lang' : clang});
                   // no longer needed at this point
-                  schemeObjects = []; 
-                } 
+                  schemeObjects = [];
+                }
                 // concept scheme page
                 else if (node.id === '#' && $('.property-value-wrapper:first() p').html() === 'skos:ConceptScheme') {
                   nodeId = $('.uri-input-box').html(); // using the real uri of the concept from the view.
                   json_url = (rest_base_url + vocab + '/topConcepts');
                   params = $.param({'scheme': nodeId, 'lang' : clang});
-                } 
+                }
                 // concept hierarchy
                 else if (node.id === '#') {
                   nodeId = $('.uri-input-box').html(); // using the real uri of the concept from the view.
-                } 
+                }
                 // narrowers of a concept
                 else  {
                   nodeId = node.uri;
@@ -409,7 +410,7 @@ function getTreeConfiguration() {
                 }
                 $.ajax({
                   data: params,
-                url: json_url, 
+                url: json_url,
                 success: function (response) {
                   if (response.broaderTransitive) { // the default hierarchy query that fires when a page loads.
                     return cb(buildParentTree(nodeId, response.broaderTransitive, schemeObjects));
@@ -429,4 +430,3 @@ function getTreeConfiguration() {
     'sort' : function (a,b) { return naturalCompare(this.get_text(a).toLowerCase(), this.get_text(b).toLowerCase()); }
   });
 }
-
