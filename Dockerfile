@@ -9,8 +9,9 @@ RUN echo "es_ES.UTF-8 UTF-8" >> /etc/locale.gen
 RUN echo "fr_FR.UTF-8 UTF-8" >> /etc/locale.gen
 RUN locale-gen
 
+RUN mkdir /config
 ADD . /var/www/html
-COPY config.ttl.dist /var/www/html/
+COPY config.ttl.dist /config
 RUN mv config.ttl.dist config.ttl
 COPY .htaccess .
 

@@ -21,7 +21,7 @@
     skosmos:sparqlCollationEnabled true ;
     skosmos:sparqlTimeout 20 ;
     skosmos:httpTimeout 5 ;
-    skosmos:serviceName "Skosmos" ;
+    skosmos:serviceName "SilkNOW" ;
     skosmos:languages (
         [ rdfs:label "es" ; rdf:value "es_ES.utf8" ]
         [ rdfs:label "en" ; rdf:value "en_GB.utf8" ]
@@ -52,8 +52,27 @@
     skosmos:showChangeList "false" ;
     skosmos:showNotation "true" ;
     skosmos:loadExternalResources "true" ;
+    skosmos:showTopConcepts "true" ;
     skosmos:mainConceptScheme <http://data.silknow.org/vocabulary/silk-thesaurus> ;
     void:sparqlEndpoint <http://data.silknow.org/sparql> ;
     void:dataDump <https://github.com/silknow/thesaurus/blob/master/thesaurus.ttl> ;
     skosmos:sparqlGraph <http://data.silknow.org/vocabulary>
+.
+
+:att a skosmos:Vocabulary, void:Dataset ;
+    dc:title "Art and Architecture Thesaurus (ATT)" ;
+    dc:subject :cat_general ;
+    dc:type mdrtype:THESAURUS ;
+    void:uriSpace "http://vocab.getty.edu/aat/";
+    skosmos:languages "es", "en";
+    skosmos:defaultLanguage "en" ;
+    skosmos:shortName "ATT";
+    skosmos:showChangeList "false" ;
+    skosmos:showNotation "true" ;
+    skosmos:loadExternalResources "true" ;
+    skosmos:groupClass skos:Collection ;
+    skosmos:mainConceptScheme <http://vocab.getty.edu/aat/> ;
+    void:sparqlEndpoint <http://data.silknow.org/sparql> ;
+    void:dataDump <http://vocab.getty.edu/aat.ttl> ;
+    skosmos:sparqlGraph <http://data.silknow.org/vocabulary_att>
 .

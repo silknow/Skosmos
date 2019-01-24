@@ -1,7 +1,7 @@
 Options +FollowSymlinks -MultiViews -Indexes
 
 RewriteEngine on
-RewriteBase /skosmos
+RewriteBase /
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^entity$ entity.php [L]
@@ -11,6 +11,7 @@ RewriteRule ^rest/v1/swagger.json$ swagger.json [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^rest/v1/(.*)$ rest.php/$1 [L]
 
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond $0 !^resource/
 RewriteRule ^(.*)$ index.php/$1 [L]

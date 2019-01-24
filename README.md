@@ -1,3 +1,10 @@
     docker build -t skosmos .
-    docker run -i -t -p 8000:80 -v /Users/pasquale/Desktop/docker-skosmos/config.ttl:/var/www/html/config.ttl --name silknow_skosmos skosmos
-    docker run -d -p 8872:80 --name silknow_skosmos skosmos
+    docker run -d -p 8872:80 -v /var/docker/virtuoso/silknow/Skosmos/config:/config --name silknow_skosmos skosmos
+
+    <!--
+    docker run -i -t -p 8000:80 -v /Users/pasquale/git/Skosmosp/config:/config --name silknow_skosmos skosmos
+     -->
+
+    docker stop silknow_skosmos
+    docker rm silknow_skosmos
+    docker rmi skosmos

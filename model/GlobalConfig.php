@@ -24,11 +24,11 @@ class GlobalConfig extends BaseConfig {
     /** EasyRdf\Graph graph */
     private $graph;
 
-    public function __construct($config_name='/../config.ttl')
+    public function __construct($config_name='/config/config.ttl')
     {
         $this->cache = new Cache();
         try {
-            $this->filePath = realpath( dirname(__FILE__) . $config_name );
+            $this->filePath = realpath( $config_name );
             if (!file_exists($this->filePath)) {
                 throw new Exception('config.ttl file is missing, please provide one.');
             }
@@ -78,7 +78,7 @@ class GlobalConfig extends BaseConfig {
             $this->initializeNamespaces();
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
-        }      
+        }
     }
 
     /**
