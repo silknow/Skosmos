@@ -521,11 +521,14 @@ class Concept extends VocabularyDataObject
                 if (!$is_well_known && !$proplabel) {
                     $envLangLabels = $this->model->getDefaultSparql()->queryLabel($longUri, $this->getEnvLang());
 
-                    $defaultPropLabel = $this->model->getDefaultSparql()->queryLabel($longUri, '');
                     if (!empty($envLangLabels)) {
-                        $proplabel = $envLangLabels[$this->getEnvLang()];
-                    } else if (!empty($defaultPropLabel)) {
-                        $proplabel = reset($defaultPropLabel);
+                        $proplabel = reset($envLangLabels);
+                    } else {
+                        $defaultPropLabel = $this->model->getDefaultSparql()->queryLabel($longUri, '');
+
+                        if (!empty($defaultPropLabel)) {
+                            $proplabel = reset($defaultPropLabel);
+                        }
                     }
                 }
 
