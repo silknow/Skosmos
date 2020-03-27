@@ -518,18 +518,15 @@ class Concept extends VocabularyDataObject
                 // if not found in current vocabulary, look up in the default graph to be able
                 // to read an ontology loaded in a separate graph
                 // note that this imply that the property has an rdf:type declared for the query to work
-                if(!$is_well_known && !$proplabel) {
+                if (!$is_well_known && !$proplabel) {
                     $envLangLabels = $this->model->getDefaultSparql()->queryLabel($longUri, $this->getEnvLang());
-                    
-                    $defaultPropLabel = $this->model->getDefaultSparql()->queryLabel($longUri, '');
 
-					if($envLangLabels) {
-						$proplabel = $envLangLabels[$this->getEnvLang()];
-                    } else {
-						if($defaultPropLabel) {
-							$proplabel = $defaultPropLabel[''];
-						}
-					}
+                    $defaultPropLabel = $this->model->getDefaultSparql()->queryLabel($longUri, '');
+                    if (!empty($envLangLabels)) {
+                        $proplabel = $envLangLabels[$this->getEnvLang()];
+                    } else if (!empty($defaultPropLabel)) {
+                        $proplabel = reset($defaultPropLabel);
+                    }
                 }
 
                 // look for superproperties in the current graph
