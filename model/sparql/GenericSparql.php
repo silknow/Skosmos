@@ -1363,7 +1363,7 @@ WHERE {
   }
 }
 EOQ;
-        return $query;
+        return $this->generateQueryPrefixes($query) . $query;
     }
 
     /**
