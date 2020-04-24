@@ -373,7 +373,7 @@ EOQ;
         }
         $query = <<<EOQ
 CONSTRUCT {
- ?s ?p ?uri .
+ ?s ?pr ?uri .
  ?sp ?uri ?op .
  ?uri ?p ?o .
  ?p rdfs:label ?proplabel .
@@ -398,9 +398,9 @@ CONSTRUCT {
  $values
  $gcl {
   {
-    ?s ?p ?uri .
+    ?s ?pr ?uri .
     FILTER(!isBlank(?s))
-    FILTER(?p != skos:inScheme)
+    FILTER(?pr != skos:inScheme)
   }
   UNION
   { ?sp ?uri ?op . }
