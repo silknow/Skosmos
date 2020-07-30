@@ -33,7 +33,7 @@
     skosmos:logCaughtExceptions true ;
     skosmos:logBrowserConsole true ;
     skosmos:templateCache "/tmp/skosmos-template-cache" ;
-    skosmos:baseHref "http://skosmos.silknow.org/";
+    skosmos:baseHref "https://skosmos.silknow.org/";
     # skosmos:customCss "resource/css/stylesheet.css" ;
     skosmos:uiLanguageDropdown true ;
     # whether to enable the spam honey pot or not, enabled by default
