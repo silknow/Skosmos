@@ -84,7 +84,7 @@
     skosmos:mainConceptScheme <http://data.silknow.org/category/silk-category-vocabulary> ;
     void:sparqlEndpoint <http://data.silknow.org/sparql> ;
     void:dataDump <https://github.com/silknow/thesaurus/blob/master/categories.ttl> ;
-    skosmos:sparqlGraph <http://data.silknow.org/category>
+    skosmos:sparqlGraph <http://data.silknow.org/control_vocab>
     .
     
 
