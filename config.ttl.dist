@@ -66,7 +66,7 @@
     .
 
 :categories a skosmos:Vocabulary, void:Dataset ;
-    dc:title "SILK Categories / Type of objects" ;
+    dc:title "SILKNOW Categories / Type of objects" ;
     dc:subject :cat_general ;
     dc:type mdrtype:THESAURUS ;
     void:uriSpace "http://data.silknow.org/category/";
