@@ -63,7 +63,30 @@
     void:sparqlEndpoint <http://data.silknow.org/sparql> ;
     void:dataDump <https://github.com/silknow/thesaurus/blob/master/thesaurus.ttl> ;
     skosmos:sparqlGraph <http://data.silknow.org/vocabulary>
-.
+    .
+
+:categories a skosmos:Vocabulary, void:Dataset ;
+    dc:title "SILK Categories / Type of objects" ;
+    dc:subject :cat_general ;
+    dc:type mdrtype:THESAURUS ;
+    void:uriSpace "http://data.silknow.org/category/";
+    skosmos:language "es", "en", "fr", "ca";
+    skosmos:fallbackLanguages "en", "fr", "es" ;
+    skosmos:defaultLanguage "en" ;
+    skosmos:groupClass skos:Collection ;
+    # skosmos:hasMultiLingualProperty dc:bibliographicCitation, skos:definition ;
+    skosmos:showDeprecated "true" ;
+    skosmos:shortName "SILKcat";
+    skosmos:showChangeList "false" ;
+    skosmos:showNotation "true" ;
+    skosmos:loadExternalResources "true" ;
+    skosmos:showTopConcepts "true" ;
+    skosmos:mainConceptScheme <http://data.silknow.org/category/silk-category-vocabulary> ;
+    void:sparqlEndpoint <http://data.silknow.org/sparql> ;
+    void:dataDump <https://github.com/silknow/thesaurus/blob/master/categories.ttl> ;
+    skosmos:sparqlGraph <http://data.silknow.org/category>
+    .
+    
 
 #:att a skosmos:Vocabulary, void:Dataset ;
 #    dc:title "Art and Architecture Thesaurus (ATT)" ;
