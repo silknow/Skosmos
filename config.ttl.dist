@@ -13,7 +13,7 @@
 @prefix mdrtype: <http://publications.europa.eu/resource/authority/dataset-type/> .
 @prefix : <#> .
 
-# Skosmos main configuration
+# skosmos main configuration
 
 :config a skosmos:Configuration ;
     skosmos:sparqlEndpoint <http://data.silknow.org/sparql> ;
@@ -41,10 +41,10 @@
     skosmos:uiHoneypotTime 5 ;
     skosmos:globalPlugins () .
 
-# Skosmos vocabularies
+# skosmos vocabularies
 
 :thesaurus a skosmos:Vocabulary, void:Dataset ;
-    dc:title "SILK Thesaurus" ;
+    dc:title "SILKNOW main thesaurus describing mostly production techniques and material" ;
     dc:subject :cat_general ;
     dc:type mdrtype:THESAURUS ;
     void:uriSpace "http://data.silknow.org/vocabulary/";
@@ -66,7 +66,7 @@
     .
 
 :categories a skosmos:Vocabulary, void:Dataset ;
-    dc:title "SILKNOW Categories / Type of objects" ;
+    dc:title "SILKNOW thesaurus describing categories of silk-related objects" ;
     dc:subject :cat_general ;
     dc:type mdrtype:THESAURUS ;
     void:uriSpace "http://data.silknow.org/category/";
