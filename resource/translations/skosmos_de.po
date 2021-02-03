@@ -1,4 +1,4 @@
-# 
+#
 # Translators:
 # CH_ <ch@infobib.de>, 2017
 # Joachim Neubert <j.neubert@zbw.eu>, 2015-2016
@@ -764,3 +764,6 @@ msgstr "Wenn Sie eine direkte Antwort erhalten möchten, geben Sie bitte Ihren N
 
 msgid "concept_types"
 msgstr "Konzept Typ"
+
+msgid "We're open to collaboration, feel free to send us your suggestions to"
+msgstr "Wir sind offen für Zusammenarbeit. Senden Sie uns Ihre Vorschläge an"

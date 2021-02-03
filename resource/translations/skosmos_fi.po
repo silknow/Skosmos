@@ -767,3 +767,6 @@ msgstr ""
 
 msgid "concept_types"
 msgstr "Käsitteen tyypit"
+
+msgid "We're open to collaboration, feel free to send us your suggestions to"
+msgstr "Olemme avoimia yhteistyölle. Voit lähettää meille ehdotuksesi osoitteeseen"

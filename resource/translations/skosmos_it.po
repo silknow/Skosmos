@@ -1,4 +1,4 @@
-# 
+#
 # Translators:
 # Armando Stellato <stellato@info.uniroma2.it>, 2015-2016
 # osma <osma.suominen@helsinki.fi>, 2015,2017
@@ -762,3 +762,6 @@ msgstr ""
 
 msgid "concept_types"
 msgstr ""
+
+msgid "We're open to collaboration, feel free to send us your suggestions to"
+msgstr "Siamo aperti alla collaborazione, sentiti libero di inviarci i tuoi suggerimenti a"

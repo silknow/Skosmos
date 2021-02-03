@@ -1,4 +1,4 @@
-# 
+#
 # Translators:
 # Omid Ghiasvand <o.ghiasvand@gmail.com>, 2018
 # Reza Ghiasvand <teaching.ghiasvand@gmail.com>, 2018
@@ -762,3 +762,6 @@ msgstr ""
 
 msgid "concept_types"
 msgstr ""
+
+msgid "We're open to collaboration, feel free to send us your suggestions to"
+msgstr "ما برای همکاری آزاد هستیم ، در صورت تمایل پیشنهادات خود را برای ما ارسال کنید"

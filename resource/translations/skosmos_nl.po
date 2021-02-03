@@ -1,4 +1,4 @@
-# 
+#
 # Translators:
 # Ismail Kutlu <ismail.kutlu94@gmail.com>, 2018
 # Maxime Van Driessche <spammaxime@hotmail.com>, 2018
@@ -763,3 +763,6 @@ msgstr ""
 
 msgid "concept_types"
 msgstr ""
+
+msgid "We're open to collaboration, feel free to send us your suggestions to"
+msgstr "We staan open voor samenwerking, stuur ons gerust uw suggesties naar"

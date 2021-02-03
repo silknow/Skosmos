@@ -768,3 +768,6 @@ msgstr ""
 
 msgid "concept_types"
 msgstr "Concept types"
+
+msgid "We're open to collaboration, feel free to send us your suggestions to"
+msgstr "We're open to collaboration, feel free to send us your suggestions to"

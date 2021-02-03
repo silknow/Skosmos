@@ -1,4 +1,4 @@
-# 
+#
 # Translators:
 # Dan Michael O. Heggø <danmichaelo@gmail.com>, 2015-2017
 # osma <osma.suominen@helsinki.fi>, 2017
@@ -762,3 +762,6 @@ msgstr ""
 
 msgid "concept_types"
 msgstr ""
+
+msgid "We're open to collaboration, feel free to send us your suggestions to"
+msgstr "Vi er åpne for samarbeid, send oss gjerne dine forslag til"

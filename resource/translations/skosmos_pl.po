@@ -1,4 +1,4 @@
-# 
+#
 # Translators:
 # dominik_tomaszuk <ddooss@wp.pl>, 2017
 # dominik_tomaszuk <ddooss@wp.pl>, 2017
@@ -763,3 +763,6 @@ msgstr ""
 
 msgid "concept_types"
 msgstr ""
+
+msgid "We're open to collaboration, feel free to send us your suggestions to"
+msgstr "Jesteśmy otwarci na współpracę, zachęcamy do przesyłania nam sugestii na adres"

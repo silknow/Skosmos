@@ -1,4 +1,4 @@
-# 
+#
 # Translators:
 # hyu623 <hyu623@163.com>, 2015
 # osma <osma.suominen@helsinki.fi>, 2017
@@ -762,3 +762,6 @@ msgstr ""
 
 msgid "concept_types"
 msgstr ""
+
+msgid "We're open to collaboration, feel free to send us your suggestions to"
+msgstr "我们欢迎合作，欢迎随时将您的建议发送给我们"
