@@ -44,7 +44,7 @@
 # skosmos vocabularies
 
 :thesaurus a skosmos:Vocabulary, void:Dataset ;
-    dc:title "SILKNOW main thesaurus describing mostly production techniques and material" ;
+    dc:title "Silk Heritage Thesaurus" ;
     dc:subject :cat_general ;
     dc:type mdrtype:THESAURUS ;
     void:uriSpace "http://data.silknow.org/vocabulary/";
