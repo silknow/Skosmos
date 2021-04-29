@@ -97,6 +97,31 @@ class RestController extends Controller
         return $this->returnJson($ret);
     }
 
+    /**
+     * Returns the link to a Wikidata image from a Wikidata QID (Qxxx)
+     */
+    public function wikidataImage($request)
+    {
+        $url = 'https://www.wikidata.org/wiki/Special:EntityData/' . $request->getQueryParam('qid') . '.json';
+        $json = file_get_contents($url);
+        $data = json_decode($json, true);
+
+        $entityKey = key($data['entities']);
+        $imageName = $data['entities'][$entityKey]['claims']['P18'][0]['mainsnak']['datavalue']['value'];
+
+        $json = file_get_contents('https://en.wikipedia.org/w/api.php?action=query&format=json&titles=File:' . rawurlencode($imageName) . '&prop=imageinfo&iilimit=50&iiprop=timestamp|user|url');
+        $data = json_decode($json, true);
+
+        $imageUrl = $data['query']['pages']['-1']['imageinfo'][0]['url'];
+
+        /* encode the results in a JSON-LD compatible array */
+        $ret = array(
+            'url' => $imageUrl,
+        );
+
+        return $this->returnJson($ret);
+    }
+
     private function constructSearchParameters($request)
     {
         $parameters = new ConceptSearchParameters($request, $this->model->getConfig(), true);

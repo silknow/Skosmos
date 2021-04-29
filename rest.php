@@ -25,6 +25,8 @@ try {
         echo ("404 Not Found");
     } elseif ($parts[1] == 'vocabularies') {
         $controller->vocabularies($request);
+    } elseif ($parts[1] == 'wikidata-image') {
+        $controller->wikidataImage($request);
     } elseif ($parts[1] == 'search') {
         $controller->search($request);
     } elseif ($parts[1] == 'types') {

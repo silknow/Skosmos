@@ -33,6 +33,29 @@
             {% endif %}
             {% endfor %}
             </div>
+            <div class="concept-images"></div>
+            <script type="text/javascript">
+              $('a.versal').each((i, elem) => {
+                const href = $(elem).attr('href');
+                if (href.startsWith('http://www.wikidata.org/')) {
+                  const parts = href.split('/');
+                  const wdt = parts[parts.length - 1];
+                  const base_href = $('base').attr('href');
+                  fetch(`${base_href}rest/v1/wikidata-image?qid=${encodeURIComponent(wdt)}`).then(response => response.json()).then(data => {
+                    const imageSrc = data.url;
+
+                    const img = $('<img style="max-width: 300px;" />');
+                    $(img).attr('src', imageSrc);
+
+                    const link = $('<a target="_blank" rel="noopener noreferrer" />');
+                    link.attr('href', imageSrc);
+                    link.append(img);
+
+                    $('.concept-images').append(link);
+                  });
+                }
+              });
+            </script>
           {% endif %}
         {% endfor %}
       {% endif %}
