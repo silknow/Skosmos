@@ -35,7 +35,7 @@
             </div>
             <div class="concept-images"></div>
             <script type="text/javascript">
-              (function() {
+              document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('a.versal').forEach((elem) => {
                   const href = elem.href;
                   if (href.startsWith('http://www.wikidata.org/')) {
@@ -59,7 +59,7 @@
                     });
                   }
                 });
-              })();
+              });
             </script>
           {% endif %}
         {% endfor %}
