@@ -36,23 +36,26 @@
             <div class="concept-images"></div>
             <script type="text/javascript">
               (function() {
-                $('a.versal').each((i, elem) => {
-                  const href = $(elem).attr('href');
+                document.querySelectorAll('a.versal').forEach((elem) => {
+                  const href = elem.href;
                   if (href.startsWith('http://www.wikidata.org/')) {
                     const parts = href.split('/');
                     const wdt = parts[parts.length - 1];
-                    const base_href = $('base').attr('href');
-                    fetch(`${base_href}rest/v1/wikidata-image?qid=${encodeURIComponent(wdt)}`).then(response => response.json()).then(data => {
+                    const baseHref = document.querySelector('base').href;
+                    fetch(`${baseHref}rest/v1/wikidata-image?qid=${encodeURIComponent(wdt)}`).then(response => response.json()).then(data => {
                       const imageSrc = data.url;
 
-                      const img = $('<img style="max-width: 300px;" />');
-                      $(img).attr('src', imageSrc);
+                      const img = document.createElement('img');
+                      img.style.maxWidth = '300px';
+                      img.src = imageSrc;
 
-                      const link = $('<a target="_blank" rel="noopener noreferrer" />');
-                      link.attr('href', imageSrc);
+                      const link = document.createElement('a');
+                      link.target = '_blank';
+                      link.rel = 'noopener noreferrer';
+                      link.href = imageSrc;
+
                       link.append(img);
-
-                      $('.concept-images').append(link);
+                      document.querySelector('.concept-images').append(link);
                     });
                   }
                 });
