@@ -43,6 +43,7 @@ class WebController extends Controller
         $this->twig->addGlobal("BaseHref", $this->getBaseHref());
         // setting the service name string from the config.ttl
         $this->twig->addGlobal("ServiceName", $this->model->getConfig()->getServiceName());
+        $this->twig->addGlobal("Mail", $this->model->getConfig()->getMail());
 
         // setting the service custom css file from the config.ttl
         if ($this->model->getConfig()->getCustomCss() !== null) {

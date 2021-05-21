@@ -22,6 +22,7 @@
     skosmos:sparqlTimeout 20 ;
     skosmos:httpTimeout 5 ;
     skosmos:serviceName "SILKNOW" ;
+    skosmos:mail "info@silknow.com" ;
     skosmos:languages (
         [ rdfs:label "es" ; rdf:value "es_ES.utf8" ]
         [ rdfs:label "en" ; rdf:value "en_GB.utf8" ]
@@ -86,7 +87,6 @@
 #    void:dataDump <https://github.com/silknow/thesaurus/blob/master/categories.ttl> ;
 #    skosmos:sparqlGraph <http://data.silknow.org/category>
 #    .
-    
 
 #:att a skosmos:Vocabulary, void:Dataset ;
 #    dc:title "Art and Architecture Thesaurus (ATT)" ;

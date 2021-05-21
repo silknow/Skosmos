@@ -280,6 +280,14 @@ class GlobalConfig extends BaseConfig {
     /**
      * @return string
      */
+    public function getMail()
+    {
+        return $this->getLiteral('skosmos:mail', 'info@example.com');
+    }
+
+    /**
+     * @return string
+     */
     public function getCustomCss()
     {
         return $this->getLiteral('skosmos:customCss', null);
