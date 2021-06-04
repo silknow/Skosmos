@@ -144,6 +144,17 @@ function attachTopConceptsToSchemes(schemes, currentNode, parentData) {
   return schemes;
 }
 
+function findBroadestUri(parentData) {
+  for (var conceptUri in parentData) {
+    var concept = parentData[conceptUri];
+    for (var broader of concept.broader) {
+      if (!(broader in parentData)) {
+        return conceptUri;
+      }
+    }
+  }
+}
+
 /*
  * For building a parent hierarchy tree from the leaf concept to the ontology/vocabulary root.
  * @param {String} uri
@@ -157,6 +168,9 @@ function buildParentTree(uri, parentData, schemes) {
     currentNode,
     rootArray = (schemes.length > 1) ? schemes : [];
 
+  var broadestUri = findBroadestUri(parentData);
+  var broadestNode = createConceptObject(broadestUri, parentData[broadestUri]);
+
   for(var conceptUri in parentData) {
     if (parentData.hasOwnProperty(conceptUri)) {
       var branchHelper,
@@ -167,6 +181,7 @@ function buildParentTree(uri, parentData, schemes) {
        */
       if (parentData[conceptUri].top || ( loopIndex === Object.size(parentData)-1) && rootArray.length === 0 || !currentNode.parents && rootArray.length === 0) {
         if (rootArray.length === 0) {
+          currentNode = broadestNode;
           branchHelper = currentNode;
         }
         // if there are multiple concept schemes attach the topConcepts to the concept schemes
