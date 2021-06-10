@@ -60,6 +60,7 @@
     skosmos:showNotation "true" ;
     skosmos:loadExternalResources "true" ;
     skosmos:showTopConcepts "true" ;
+    skosmos:showGroups "false" ;
     skosmos:mainConceptScheme <http://data.silknow.org/vocabulary/silk-thesaurus> ;
     void:sparqlEndpoint <http://data.silknow.org/sparql> ;
     void:dataDump <https://github.com/silknow/thesaurus/blob/master/thesaurus.ttl> ;
