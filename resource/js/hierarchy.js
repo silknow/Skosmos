@@ -147,9 +147,11 @@ function attachTopConceptsToSchemes(schemes, currentNode, parentData) {
 function findBroadestUri(parentData) {
   for (var conceptUri in parentData) {
     var concept = parentData[conceptUri];
-    for (var broader of concept.broader) {
-      if (!(broader in parentData)) {
-        return conceptUri;
+    if (concept.broader) {
+      for (var broader of concept.broader) {
+        if (!(broader in parentData)) {
+          return conceptUri;
+        }
       }
     }
   }
