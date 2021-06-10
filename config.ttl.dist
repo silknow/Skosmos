@@ -89,21 +89,21 @@
 #    skosmos:sparqlGraph <http://data.silknow.org/category>
 #    .
 
-#:att a skosmos:Vocabulary, void:Dataset ;
-#    dc:title "Art and Architecture Thesaurus (ATT)" ;
-#    dc:subject :cat_general ;
-#    dc:type mdrtype:THESAURUS ;
-#    void:uriSpace "http://vocab.getty.edu/aat/";
-#    skosmos:languages "es", "en", "it", "fr";
-#    skosmos:defaultLanguage "en" ;
-#    skosmos:shortName "ATT";
-#    skosmos:showChangeList "false" ;
-#    skosmos:showNotation "true" ;
-#    skosmos:loadExternalResources "true" ;
-#    skosmos:showTopConcepts "true" ;
-#    skosmos:groupClass skos:Collection ;
-#    skosmos:mainConceptScheme <http://vocab.getty.edu/aat/> ;
-#    void:sparqlEndpoint <http://data.silknow.org/sparql> ;
-#    void:dataDump <http://vocab.getty.edu/aat.ttl> ;
-#    skosmos:sparqlGraph <http://data.silknow.org/vocabulary_att>
-#.
+:att a skosmos:Vocabulary, void:Dataset ;
+    dc:title "Art and Architecture Thesaurus (ATT)" ;
+    dc:subject :cat_general ;
+    dc:type mdrtype:THESAURUS ;
+    void:uriSpace "http://vocab.getty.edu/aat/";
+    skosmos:languages "es", "en", "it", "fr";
+    skosmos:defaultLanguage "en" ;
+    skosmos:shortName "ATT";
+    skosmos:showChangeList "false" ;
+    skosmos:showNotation "true" ;
+    skosmos:loadExternalResources "true" ;
+    skosmos:showTopConcepts "true" ;
+    skosmos:groupClass skos:Collection ;
+    skosmos:mainConceptScheme <http://vocab.getty.edu/aat/> ;
+    void:sparqlEndpoint <http://data.silknow.org/sparql> ;
+    void:dataDump <http://vocab.getty.edu/aat.ttl> ;
+    skosmos:sparqlGraph <http://data.silknow.org/aat>
+.
