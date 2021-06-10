@@ -343,7 +343,7 @@ ul.dropdown-menu > li:last-child > input {
   float: right;
   margin: 5px 15px 19px 5px;
 }
-  
+
 .frontpage-spacing > .header-float {
   margin: 0;
 }
@@ -571,7 +571,7 @@ span.xl-pref-label > img {
 .welcome-box, .right-box, #vocabulary-list {
   vertical-align: top;
 }
-  
+
 .welcome-box {
   background-color: #ffffff;
   display: inline-block;
@@ -1373,6 +1373,12 @@ ul.nav-tabs > li {
   cursor: default;
 }
 
+#groups-disabled > *, #groups-disabled > *:hover {
+  background-color: #B9C1C6;
+  color: #74787A;
+  cursor: default;
+}
+
 #changes > a {
   background-color: #DEDFE0;
 }
@@ -1758,13 +1764,13 @@ body, .versal, h1, h2, p, .versal-bold {
   .row > .property-value-column, .row > .property-value-column  {
     margin: 5px 0;
   }
-  
+
   .row:nth-of-type(2) > .property-value-column {
     margin: 2px 0 0 0;
     height: 30px;
     line-height: 30px;
   }
-  
+
   .concept-main > .row > .property-label-pref {
       margin-top: 10px;
       height: 20px;
@@ -1791,7 +1797,7 @@ body, .versal, h1, h2, p, .versal-bold {
     margin: 0;
     width: 100%;
   }
-  
+
   .headerbar-coloured {
     overflow: hidden;
   }
@@ -1803,11 +1809,11 @@ body, .versal, h1, h2, p, .versal-bold {
   .content {
     overflow: hidden;
   }
-  
+
 }
 
 @media (max-width: 800px) {
-  
+
   .twitter-typeahead {
     width: 100%;
   }
@@ -1886,7 +1892,7 @@ body, .versal, h1, h2, p, .versal-bold {
   .frontpage-spacing > .header-float > .navbar-form {
     width: 100%;
   }
-  
+
   .frontpage-spacing > .header-float > .navbar-form > .input-group {
     margin-top: 5px;
   }
@@ -1901,7 +1907,7 @@ body, .versal, h1, h2, p, .versal-bold {
   .right-box {
     display: inline;
   }
-  
+
   .voclist-wide > .right-box {
     left: 0;
     top: 425px;
@@ -1968,12 +1974,12 @@ body, .versal, h1, h2, p, .versal-bold {
   .frontpage > .welcome-box, .frontpage > .right-box {
     width: 200px;
   }
-    
+
   .voclist #vocabulary-list {
     margin-left: 20px;
     width: calc(100% - 225px);
   }
-  
+
    .voclist-right #vocabulary-list {
     margin-left: 20px;
     width: auto;

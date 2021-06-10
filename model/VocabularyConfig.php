@@ -240,6 +240,15 @@ class VocabularyConfig extends BaseConfig
      * Returns a boolean value set in the config.ttl config.
      * @return boolean
      */
+    public function getShowGroups()
+    {
+        return $this->getBoolean('skosmos:showGroups');
+    }
+
+    /**
+     * Returns a boolean value set in the config.ttl config.
+     * @return boolean
+     */
     public function showConceptSchemesInHierarchy()
     {
         return $this->getBoolean('skosmos:conceptSchemesInHierarchy');

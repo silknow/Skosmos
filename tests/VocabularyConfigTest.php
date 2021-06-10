@@ -251,6 +251,33 @@ class VocabularyConfigTest extends PHPUnit\Framework\TestCase
   }
 
   /**
+   * @covers VocabularyConfig::getShowGroups
+   */
+  public function testGetShowGroups() {
+    $vocab = $this->model->getVocabulary('test');
+    $uri = $vocab->getConfig()->getShowGroups();
+    $this->assertEquals(true, $uri);
+  }
+
+  /**
+   * @covers VocabularyConfig::getShowGroups
+   */
+  public function testGetShowGroupsSetToFalse() {
+    $vocab = $this->model->getVocabulary('testdiff');
+    $uri = $vocab->getConfig()->getShowGroups();
+    $this->assertEquals(false, $uri);
+  }
+
+  /**
+   * @covers VocabularyConfig::getShowGroups
+   */
+  public function testGetShowGroupsNotSet() {
+    $vocab = $this->model->getVocabulary('groups');
+    $uri = $vocab->getConfig()->getShowGroups();
+    $this->assertEquals(false, $uri);
+  }
+
+  /**
    * @covers VocabularyConfig::getAdditionalSearchProperties
    */
   public function testGetAdditionalSearchProperties() {
