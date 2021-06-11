@@ -171,7 +171,6 @@ function buildParentTree(uri, parentData, schemes) {
     rootArray = (schemes.length > 1) ? schemes : [];
 
   var broadestUri = findBroadestUri(parentData);
-  var broadestNode = createConceptObject(broadestUri, parentData[broadestUri]);
 
   for(var conceptUri in parentData) {
     if (parentData.hasOwnProperty(conceptUri)) {
@@ -183,7 +182,6 @@ function buildParentTree(uri, parentData, schemes) {
        */
       if (parentData[conceptUri].top || ( loopIndex === Object.size(parentData)-1) && rootArray.length === 0 || !currentNode.parents && rootArray.length === 0) {
         if (rootArray.length === 0) {
-          currentNode = broadestNode;
           branchHelper = currentNode;
         }
         // if there are multiple concept schemes attach the topConcepts to the concept schemes
@@ -193,6 +191,9 @@ function buildParentTree(uri, parentData, schemes) {
         else {
           rootArray.push(currentNode);
         }
+      } else {
+        // Fix for parent nodes not showing up when looking at a narrower item.
+        rootArray.push(currentNode);
       }
       if (exactMatchFound) { // combining branches if we have met a exact match during the previous iteration.
         currentNode.children.push(branchHelper);
@@ -205,6 +206,13 @@ function buildParentTree(uri, parentData, schemes) {
       }
       setNode(currentNode);
       loopIndex++;
+    }
+  }
+
+  // Fix for parent nodes not showing up when looking at a narrower item.
+  for (var i = rootArray.length - 1; i >= 0; i--) {
+    if (rootArray[i].uri !== broadestUri) {
+      rootArray.splice(i, 1);
     }
   }
 
