@@ -16,7 +16,7 @@
 # skosmos main configuration
 
 :config a skosmos:Configuration ;
-    skosmos:sparqlEndpoint <http://data.silknow.org/sparql> ;
+    skosmos:sparqlEndpoint <https://data.silknow.org/sparql> ;
     skosmos:sparqlDialect "Generic" ;
     skosmos:sparqlCollationEnabled true ;
     skosmos:sparqlTimeout 20 ;
@@ -62,7 +62,7 @@
     skosmos:showTopConcepts "true" ;
     skosmos:showGroups "false" ;
     skosmos:mainConceptScheme <http://data.silknow.org/vocabulary/silk-thesaurus> ;
-    void:sparqlEndpoint <http://data.silknow.org/sparql> ;
+    void:sparqlEndpoint <https://data.silknow.org/sparql> ;
     void:dataDump <https://github.com/silknow/thesaurus/blob/master/thesaurus.ttl> ;
     skosmos:sparqlGraph <http://data.silknow.org/vocabulary>
     .
@@ -84,7 +84,7 @@
 #   skosmos:loadExternalResources "true" ;
 #    skosmos:showTopConcepts "true" ;
 #    skosmos:mainConceptScheme <http://data.silknow.org/category/silk-category-vocabulary> ;
-#    void:sparqlEndpoint <http://data.silknow.org/sparql> ;
+#    void:sparqlEndpoint <https://data.silknow.org/sparql> ;
 #    void:dataDump <https://github.com/silknow/thesaurus/blob/master/categories.ttl> ;
 #    skosmos:sparqlGraph <http://data.silknow.org/category>
 #    .
@@ -103,7 +103,7 @@
     skosmos:showTopConcepts "true" ;
     skosmos:groupClass skos:Collection ;
     skosmos:mainConceptScheme <http://vocab.getty.edu/aat/> ;
-    void:sparqlEndpoint <http://data.silknow.org/sparql> ;
+    void:sparqlEndpoint <https://data.silknow.org/sparql> ;
     void:dataDump <http://vocab.getty.edu/aat.ttl> ;
     skosmos:sparqlGraph <http://data.silknow.org/aat>
 .
