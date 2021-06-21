@@ -148,9 +148,46 @@ function findBroadestUri(parentData) {
   for (var conceptUri in parentData) {
     var concept = parentData[conceptUri];
     if (concept.broader) {
+      let broaderExists = false;
       for (var broader of concept.broader) {
-        if (!(broader in parentData)) {
-          return conceptUri;
+        console.log('concept:', concept, 'broader:', broader, 'exists:', broader in parentData);
+        if (broader in parentData) {
+
+          for (var uri in parentData) {
+            Z
+          }
+          broaderExists = true;
+          break;
+        }
+      }
+      if (!broaderExists) {
+        console.log('broadest:', conceptUri);
+        return conceptUri;
+      }
+    }
+  }
+}
+
+function findBroadestUri(parentData, uri) {
+  if (uri) {
+    var concept = parentData[uri];
+    if (concept.broader) {
+      for (var broader of concept.broader) {
+        if (broader in parentData) {
+          return findBroadestUri(parentData, broader);
+        }
+      }
+    } else {
+      return uri;
+    }
+  } else {
+    for (var conceptUri in parentData) {
+      var concept = parentData[conceptUri];
+      if (concept.broader) {
+        for (var broader of concept.broader) {
+          if (broader in parentData) {
+            return findBroadestUri(parentData, broader);
+          }
         }
       }
     }

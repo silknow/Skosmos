@@ -394,9 +394,9 @@ CONSTRUCT {
  ?item a ?it .
  ?item skos:prefLabel ?il .
  ?group a ?grouptype . $construct
-} $fcl WHERE {
+} WHERE {
  $values
- $gcl {
+ {
   {
     ?s ?pr ?uri .
     FILTER(!isBlank(?s))
@@ -1342,7 +1342,7 @@ EOQ;
         $fcl = $this->generateFromClause();
         $labelcondLabel = ($lang) ? "FILTER( langMatches(lang(?label), '$lang') )" : "";
         $query = <<<EOQ
-SELECT ?label $fcl
+SELECT ?label
 WHERE {
   <$uri> a ?type .
   OPTIONAL {
@@ -1402,7 +1402,7 @@ EOQ;
     private function generateSubPropertyOfQuery($uri) {
         $fcl = $this->generateFromClause();
         $query = <<<EOQ
-SELECT ?superProperty $fcl
+SELECT ?superProperty
 WHERE {
   <$uri> rdfs:subPropertyOf ?superProperty
 }
@@ -1445,7 +1445,7 @@ EOQ;
         $fcl = $this->generateFromClause();
 
         $query = <<<EOQ
-SELECT * $fcl
+SELECT *
 WHERE {
   <$uri> skos:notation ?notation .
 }
@@ -1482,9 +1482,10 @@ EOQ;
         $anylang = $anylang ? "OPTIONAL { ?object skos:prefLabel ?label }" : "";
 
         $query = <<<EOQ
-SELECT * $fcl
+SELECT *
 WHERE {
-  <$uri> a skos:Concept .
+  <$uri> a ?rdfType .
+  VALUES ?rdfType { skos:Concept skos:Collection }
   OPTIONAL {
     <$uri> $prop ?object .
     OPTIONAL {
@@ -1566,11 +1567,12 @@ EOQ;
         // need to do a SPARQL subquery because LIMIT needs to be applied /after/
         // the direct relationships have been collapsed into one string
         $query = <<<EOQ
-SELECT * $fcl
+SELECT *
 WHERE {
   SELECT ?object ?label (GROUP_CONCAT(STR(?dir);separator=' ') as ?direct)
   WHERE {
-    <$uri> a skos:Concept .
+    <$uri> a ?rdfType .
+    VALUES ?rdfType { skos:Concept skos:Collection }
     OPTIONAL {
       <$uri> $propertyClause* ?object .
       OPTIONAL {
@@ -1672,10 +1674,11 @@ EOQ;
         $fcl = $this->generateFromClause();
         $propertyClause = implode('|', $props);
         $query = <<<EOQ
-SELECT ?child ?label ?child ?grandchildren ?notation $fcl WHERE {
-  <$uri> a skos:Concept .
+SELECT ?child ?label ?grandchildren ?notation WHERE {
+  <$uri> a ?rdfType .
+  VALUES ?rdfType { skos:Concept skos:Collection }
   OPTIONAL {
-    ?child $propertyClause <$uri> .
+    graph <http://data.silknow.org/vocabulary> { <$uri> skos:member|skos:narrower ?child . }
     OPTIONAL {
       ?child skos:prefLabel ?label .
       FILTER (langMatches(lang(?label), "$lang"))
@@ -1690,7 +1693,7 @@ SELECT ?child ?label ?child ?grandchildren ?notation $fcl WHERE {
     OPTIONAL {
       ?child skos:notation ?notation .
     }
-    BIND ( EXISTS { ?a $propertyClause ?child . } AS ?grandchildren )
+    BIND ( EXISTS { ?child skos:narrower|skos:member ?a . } AS ?grandchildren )
   }
 }
 EOQ;
@@ -1769,8 +1772,10 @@ EOQ;
 
         $fcl = $this->generateFromClause();
         $query = <<<EOQ
-SELECT DISTINCT ?top ?topuri ?label ?notation ?children $fcl WHERE {
-  ?top skos:topConceptOf ?topuri .
+SELECT DISTINCT ?top ?topuri ?label ?notation ?children WHERE {
+  graph <http://data.silknow.org/vocabulary> { ?top skos:member ?member }
+  graph <http://data.silknow.org/aat> { ?top a skos:Collection . }
+  ?member skos:topConceptOf ?topuri .
   OPTIONAL {
     ?top skos:prefLabel ?label .
     FILTER (langMatches(lang(?label), "$lang"))
@@ -1783,8 +1788,8 @@ SELECT DISTINCT ?top ?topuri ?label ?notation ?children $fcl WHERE {
     ?top skos:prefLabel ?label .
   }
   OPTIONAL { ?top skos:notation ?notation . }
-  BIND ( EXISTS { ?top skos:narrower ?a . } AS ?children )
-  $values
+  BIND ( EXISTS { ?top skos:member ?a . } AS ?children )
+  #$values
 }
 EOQ;
         $result = $this->query($query);
@@ -1821,13 +1826,13 @@ EOQ;
 SELECT DISTINCT
 ?broad ?parent ?children ?grandchildren
 (SAMPLE(?lab) as ?label) (SAMPLE(?childlab) as ?childlabel) (SAMPLE(?topcs) AS ?top) (SAMPLE(?nota) as ?notation) (SAMPLE(?childnota) as ?childnotation)
-$fcl
 WHERE {
-  <$uri> a skos:Concept .
+  <$uri> a ?rdfType .
+  VALUES ?rdfType { skos:Concept skos:Collection }
   OPTIONAL {
     <$uri> $propertyClause* ?broad .
-	?broad skos:prefLabel ?lab .
-	FILTER (langMatches(lang(?lab), "$lang"))
+    ?broad skos:prefLabel ?lab .
+    FILTER (langMatches(lang(?lab), "$lang"))
     OPTIONAL { ?broad skos:notation ?nota }
     OPTIONAL { ?broad $propertyClause ?parent }
 
