@@ -9,8 +9,10 @@
     <li id="alpha"{% if active_tab == 'alphabetical' %} class="active"{% endif %}><a href="{{ request.vocabid }}/{{ request.lang }}/index{% if request.contentLang != request.lang %}?clang={{ request.contentLang }}{% endif %}">{% if vocab.config.showChangeList and vocab.config.groupClassURI %}{% trans 'A-Z' %}{% else %}{% trans "Alpha-nav" %}{% endif %}</a></li>
     {% endif %}
     <li id="hierarchy{% if not vocab.config.showHierarchy %}-disabled{% endif %}"{% if active_tab == 'hierarchy' %} class="active"{% endif %}><a href="#" id="hier-trigger"{% if not vocab.config.showHierarchy %} title="{% trans 'hierarchy-disabled-help' %}"{% endif %}>{% trans "Hier-nav" %}</a></li>
+    {% if vocab.config.showGroups %}
     {% if vocab.config.groupClassURI %}
     <li id="groups{% if not vocab.config.showGroups %}-disabled{% endif %}"><a {% if not vocab.config.showGroups %}href="{{ request.vocabid }}/{{ request.lang }}/groups{% if request.contentLang != request.lang %}?clang={{ request.contentLang }}{% endif %}"{% endif %}>{% trans "Group-nav" %}</a></li>
+    {% endif %}
     {% endif %}
     {% if vocab.config.showChangeList %}
     <li id="changes"><a href="{{ request.vocabid }}/{{ request.lang }}/new{% if request.contentLang != request.lang %}?clang={{ request.contentLang }}{% endif %}">{% trans "Changes-nav" %}</a></li>
