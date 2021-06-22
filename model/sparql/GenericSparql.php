@@ -373,10 +373,12 @@ EOQ;
         }
         $query = <<<EOQ
 CONSTRUCT {
- ?s ?pr ?uri .
+ ?s ?p ?uri .
  ?sp ?uri ?op .
  ?uri ?p ?o .
  ?p rdfs:label ?proplabel .
+ ?p rdfs:comment ?propcomm .
+ ?p skos:definition ?propdef .
  ?p rdfs:subPropertyOf ?pp .
  ?pp rdfs:label ?plabel .
  ?o a ?ot .
@@ -394,13 +396,14 @@ CONSTRUCT {
  ?item a ?it .
  ?item skos:prefLabel ?il .
  ?group a ?grouptype . $construct
-} WHERE {
+} $fcl WHERE {
  $values
- {
+ $gcl {
   {
     ?s ?pr ?uri .
     FILTER(!isBlank(?s))
     FILTER(?pr != skos:inScheme)
+    FILTER NOT EXISTS { ?s owl:deprecated true . }
   }
   UNION
   { ?sp ?uri ?op . }
@@ -424,6 +427,10 @@ CONSTRUCT {
    }
    OPTIONAL {
      { ?p rdfs:label ?proplabel . }
+     UNION
+     { ?p rdfs:comment ?propcomm . }
+     UNION
+     { ?p skos:definition ?propdef . }
      UNION
      { ?p rdfs:subPropertyOf ?pp . }
    }
