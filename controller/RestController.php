@@ -660,7 +660,7 @@ class RestController extends Controller
 
         $results = $request->getVocab()->getConceptLabel($request->getUri(), $request->getLang());
         if ($results === null) {
-            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}>");
+            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}> for label");
         }
 
         $ret = array_merge_recursive($this->context, array(
@@ -718,7 +718,7 @@ class RestController extends Controller
     {
         $broaders = $request->getVocab()->getConceptBroaders($request->getUri(), $request->getLang());
         if ($broaders === null) {
-            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}>");
+            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}> for broader");
         }
         $ret = $this->transformPropertyResults($request->getUri(), $request->getLang(), $broaders, "broader", "skos:broader");
         return $this->returnJson($ret);
@@ -733,7 +733,7 @@ class RestController extends Controller
     {
         $broaders = $request->getVocab()->getConceptTransitiveBroaders($request->getUri(), $this->parseLimit(), false, $request->getLang());
         if (empty($broaders)) {
-            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}>");
+            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}> for broader transitive");
         }
         $ret = $this->transformTransitivePropertyResults($request->getUri(), $request->getLang(), $broaders, "broaderTransitive", "skos:broaderTransitive", "broader", "skos:broader");
         return $this->returnJson($ret);
@@ -748,7 +748,7 @@ class RestController extends Controller
     {
         $narrowers = $request->getVocab()->getConceptNarrowers($request->getUri(), $request->getLang());
         if ($narrowers === null) {
-            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}>");
+            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}> for narrower");
         }
         $ret = $this->transformPropertyResults($request->getUri(), $request->getLang(), $narrowers, "narrower", "skos:narrower");
         return $this->returnJson($ret);
@@ -763,7 +763,7 @@ class RestController extends Controller
     {
         $narrowers = $request->getVocab()->getConceptTransitiveNarrowers($request->getUri(), $this->parseLimit(), $request->getLang());
         if (empty($narrowers)) {
-            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}>");
+            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}> for narrower transitive");
         }
         $ret = $this->transformTransitivePropertyResults($request->getUri(), $request->getLang(), $narrowers, "narrowerTransitive", "skos:narrowerTransitive", "narrower", "skos:narrower");
         return $this->returnJson($ret);
@@ -779,7 +779,7 @@ class RestController extends Controller
     {
         $results = $request->getVocab()->getConceptHierarchy($request->getUri(), $request->getLang());
         if (empty($results)) {
-            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}>");
+            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}> for hierarchy");
         }
 
 
@@ -897,7 +897,7 @@ class RestController extends Controller
     {
         $children = $request->getVocab()->getConceptChildren($request->getUri(), $request->getLang());
         if ($children === null) {
-            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}>");
+            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}> for children");
         }
 
         $ret = array_merge_recursive($this->context, array(
@@ -918,7 +918,7 @@ class RestController extends Controller
     {
         $related = $request->getVocab()->getConceptRelateds($request->getUri(), $request->getLang());
         if ($related === null) {
-            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}>");
+            return $this->returnError('404', 'Not Found', "Could not find concept <{$request->getUri()}> for related");
         }
         $ret = $this->transformPropertyResults($request->getUri(), $request->getLang(), $related, "related", "skos:related");
         return $this->returnJson($ret);
