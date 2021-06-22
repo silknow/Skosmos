@@ -68,7 +68,7 @@ function getLabel(object) {
   if (window.showNotation && object.notation) {
     return '<span class="tree-notation">' + object.notation + '</span> ' + object[labelProp];
   }
-  console.log(escapeHtml(object[labelProp]))
+  // console.log(escapeHtml(object[labelProp]))
   return escapeHtml(object[labelProp]);
 }
 
@@ -144,56 +144,6 @@ function attachTopConceptsToSchemes(schemes, currentNode, parentData) {
   return schemes;
 }
 
-function findBroadestUri(parentData) {
-  for (var conceptUri in parentData) {
-    var concept = parentData[conceptUri];
-    if (concept.broader) {
-      let broaderExists = false;
-      for (var broader of concept.broader) {
-        console.log('concept:', concept, 'broader:', broader, 'exists:', broader in parentData);
-        if (broader in parentData) {
-
-          for (var uri in parentData) {
-            Z
-          }
-          broaderExists = true;
-          break;
-        }
-      }
-      if (!broaderExists) {
-        console.log('broadest:', conceptUri);
-        return conceptUri;
-      }
-    }
-  }
-}
-
-function findBroadestUri(parentData, uri) {
-  if (uri) {
-    var concept = parentData[uri];
-    if (concept.broader) {
-      for (var broader of concept.broader) {
-        if (broader in parentData) {
-          return findBroadestUri(parentData, broader);
-        }
-      }
-    } else {
-      return uri;
-    }
-  } else {
-    for (var conceptUri in parentData) {
-      var concept = parentData[conceptUri];
-      if (concept.broader) {
-        for (var broader of concept.broader) {
-          if (broader in parentData) {
-            return findBroadestUri(parentData, broader);
-          }
-        }
-      }
-    }
-  }
-}
-
 /*
  * For building a parent hierarchy tree from the leaf concept to the ontology/vocabulary root.
  * @param {String} uri
@@ -206,8 +156,6 @@ function buildParentTree(uri, parentData, schemes) {
   var loopIndex = 0, // for adding the last concept as a root if no better candidates have been found.
     currentNode,
     rootArray = (schemes.length > 1) ? schemes : [];
-
-  var broadestUri = findBroadestUri(parentData);
 
   for(var conceptUri in parentData) {
     if (parentData.hasOwnProperty(conceptUri)) {
@@ -228,9 +176,6 @@ function buildParentTree(uri, parentData, schemes) {
         else {
           rootArray.push(currentNode);
         }
-      } else {
-        // Fix for parent nodes not showing up when looking at a narrower item.
-        rootArray.push(currentNode);
       }
       if (exactMatchFound) { // combining branches if we have met a exact match during the previous iteration.
         currentNode.children.push(branchHelper);
@@ -243,13 +188,6 @@ function buildParentTree(uri, parentData, schemes) {
       }
       setNode(currentNode);
       loopIndex++;
-    }
-  }
-
-  // Fix for parent nodes not showing up when looking at a narrower item.
-  for (var i = rootArray.length - 1; i >= 0; i--) {
-    if (rootArray[i].uri !== broadestUri) {
-      rootArray.splice(i, 1);
     }
   }
 

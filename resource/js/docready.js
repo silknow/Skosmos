@@ -87,7 +87,7 @@ $(function() { // DOCUMENT READY
   });
 
   // if the hierarchy tab is active filling the jstree with data
-  if ($('#hierarchy').hasClass('active')) { invokeParentTree(getTreeConfiguration()); }
+  invokeParentTree(getTreeConfiguration());
   if ($('#groups').hasClass('active')) { invokeGroupTree(); }
 
   var textColor = $('.search-parameter-highlight').css('color');

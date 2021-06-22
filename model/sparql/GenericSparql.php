@@ -1577,6 +1577,8 @@ WHERE {
       <$uri> $propertyClause* ?object .
       OPTIONAL {
         ?object $propertyClause ?dir .
+        ?dir a ?dirRdfType .
+        VALUES ?dirRdfType { skos:Concept skos:Collection }
       }
     }
     OPTIONAL {
@@ -1830,19 +1832,33 @@ WHERE {
   <$uri> a ?rdfType .
   VALUES ?rdfType { skos:Concept skos:Collection }
   OPTIONAL {
-    <$uri> $propertyClause* ?broad .
+    {
+        {?broad skos:member* <$uri> .}
+        UNION
+        {<$uri> skos:broader ?broad .}
+    }
     ?broad skos:prefLabel ?lab .
     FILTER (langMatches(lang(?lab), "$lang"))
     OPTIONAL { ?broad skos:notation ?nota }
-    OPTIONAL { ?broad $propertyClause ?parent }
-
     OPTIONAL {
-      ?broad skos:narrower ?children .
-	  ?children skos:prefLabel ?childlab .
-	  FILTER (langMatches(lang(?childlab), "$lang"))
-	  OPTIONAL { ?children skos:notation ?childnota }
+        {?parent skos:member ?broad .}
+        UNION
+        {?broad skos:broader ?parent .}
     }
-    BIND ( EXISTS { ?children skos:narrower ?a . } AS ?grandchildren )
+
+    GRAPH <http://data.silknow.org/vocabulary> {
+        OPTIONAL {
+            {
+                { ?broad skos:member ?children . }
+                UNION
+                { ?children skos:broader ?broad . }
+            }
+            ?children skos:prefLabel ?childlab .
+            FILTER (langMatches(lang(?childlab), "$lang"))
+            OPTIONAL { ?children skos:notation ?childnota }
+        }
+    }
+    BIND ( EXISTS { ?a skos:member ?children . } AS ?grandchildren )
     OPTIONAL { ?broad skos:topConceptOf ?topcs . }
   }
 }
