@@ -765,4 +765,4 @@ msgid "concept_types"
 msgstr ""
 
 msgid "We're open to collaboration, feel free to send us your suggestions to"
-msgstr "Estamos abiertos a la colaboración, no dude en enviarnos sus sugerencias a"
+msgstr "Estamos abiertos a colaborar, envíenos sus sugerencias a"

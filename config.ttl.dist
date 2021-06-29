@@ -22,7 +22,7 @@
     skosmos:sparqlTimeout 20 ;
     skosmos:httpTimeout 5 ;
     skosmos:serviceName "SILKNOW" ;
-    skosmos:mail "info@silknow.com" ;
+    skosmos:mail "info@silknow.eu" ;
     skosmos:languages (
         [ rdfs:label "es" ; rdf:value "es_ES.utf8" ]
         [ rdfs:label "en" ; rdf:value "en_GB.utf8" ]
