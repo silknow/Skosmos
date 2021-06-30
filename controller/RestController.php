@@ -590,6 +590,7 @@ class RestController extends Controller
                 'owl' => 'http://www.w3.org/2002/07/owl#',
                 'dct' => 'http://purl.org/dc/terms/',
                 'dc11' => 'http://purl.org/dc/elements/1.1/',
+                'pav' => 'http://purl.org/pav/',
                 'uri' => '@id',
                 'type' => '@type',
                 'lang' => '@language',

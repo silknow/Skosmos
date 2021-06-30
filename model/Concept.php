@@ -863,6 +863,7 @@ class Concept extends VocabularyDataObject
             'schema' => EasyRdf\RdfNamespace::get("schema"),
             'wd' => EasyRdf\RdfNamespace::get("wd"),
             'wdt' => EasyRdf\RdfNamespace::get("wdt"),
+            'pav' => EasyRdf\RdfNamespace::get("pav"),
         );
         $vocabPrefix = preg_replace('/\W+/', '', $this->vocab->getId()); // strip non-word characters
         $vocabUriSpace = $this->vocab->getUriSpace();

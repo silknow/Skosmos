@@ -142,8 +142,7 @@ class Vocabulary extends DataObject
         $sparql = $this->getSparql();
         $result = $sparql->queryConceptScheme($defaultcs);
         $conceptscheme = $result->resource($defaultcs);
-        $this->order = array("dc:title", "dc11:title", "skos:prefLabel", "rdfs:label", "dc:subject", "dc11:subject", "dc:description", "dc11:description", "dc:publisher", "dc11:publisher", "dc:creator", "dc11:creator", "dc:contributor", "dc:language", "dc11:language", "owl:versionInfo", "dc:source", "dc11:source");
-
+        $this->order = array("dc:title", "dc11:title", "skos:prefLabel", "rdfs:label", "dc:subject", "dc11:subject", "dc:description", "dc11:description", "dc:publisher", "dc11:publisher", "dc:creator", "dc11:creator", "dc:contributor", "dc:language", "dc11:language", "owl:versionInfo", "pav:version", "dc:source", "dc11:source");
         foreach ($conceptscheme->properties() as $prop) {
             foreach ($conceptscheme->allLiterals($prop, $lang) as $val) {
                 $prop = (substr($prop, 0, 5) == 'dc11:') ? str_replace('dc11:', 'dc:', $prop) : $prop;
@@ -175,6 +174,9 @@ class Vocabulary extends DataObject
         }
         if (isset($ret['owl:versionInfo'])) { // if version info availible for vocabulary convert it to a more readable format
             $ret['owl:versionInfo'][0] = $this->parseVersionInfo($ret['owl:versionInfo'][0]);
+        }
+        if (isset($ret['http://purl.org/pav/version'])) { // if version info availible for vocabulary convert it to a more readable format
+            $ret['http://purl.org/pav/version'][0] = $this->parseVersionInfo($ret['http://purl.org/pav/version'][0]);
         }
         // remove duplicate values
         foreach (array_keys($ret) as $prop) {

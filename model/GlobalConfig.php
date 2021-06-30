@@ -9,6 +9,7 @@ EasyRdf\RdfNamespace::set('isothes', 'http://purl.org/iso25964/skos-thes#');
 EasyRdf\RdfNamespace::set('mads', 'http://www.loc.gov/mads/rdf/v1#');
 EasyRdf\RdfNamespace::set('wd', 'http://www.wikidata.org/entity/');
 EasyRdf\RdfNamespace::set('wdt', 'http://www.wikidata.org/prop/direct/');
+EasyRdf\RdfNamespace::set('pav', 'http://purl.org/pav/');
 
 /**
  * GlobalConfig provides access to the Skosmos configuration in config.ttl.

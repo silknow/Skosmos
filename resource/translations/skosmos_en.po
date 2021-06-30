@@ -761,13 +761,24 @@ msgstr ""
 "if the truncation symbol is not entered manually: thus, cat will yield the "
 "same results as cat*."
 
+#:
 msgid "feedback_enter_name_email"
 msgstr ""
 "Please enter your name and email address if you wish to receive a direct "
 "response. You also have the option to submit your feedback anonymously."
 
+#:
 msgid "concept_types"
 msgstr "Concept types"
 
+#:
 msgid "We're open to collaboration, feel free to send us your suggestions to"
 msgstr "We're open to collaboration, feel free to send us your suggestions to"
+
+#:
+msgid "pav:createdOn"
+msgstr "Created on"
+
+#:
+msgid "pav:version"
+msgstr "Version"

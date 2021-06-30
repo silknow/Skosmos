@@ -767,3 +767,9 @@ msgstr ""
 
 msgid "We're open to collaboration, feel free to send us your suggestions to"
 msgstr "Nous sommes ouverts à la collaboration, n'hésiter pas à nous envoyer vos suggestions à"
+
+msgid "pav:createdOn"
+msgstr "Créé le"
+
+msgid "pav:version"
+msgstr "Version"
