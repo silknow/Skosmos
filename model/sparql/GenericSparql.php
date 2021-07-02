@@ -1687,7 +1687,16 @@ SELECT ?child ?label ?grandchildren ?notation WHERE {
   <$uri> a ?rdfType .
   VALUES ?rdfType { skos:Concept skos:Collection }
   OPTIONAL {
-    graph <http://data.silknow.org/vocabulary> { <$uri> skos:member|skos:narrower ?child . }
+    {
+        GRAPH <http://data.silknow.org/vocabulary> { <$uri> skos:narrower ?child . }
+    }
+    UNION
+    {
+        GRAPH <http://data.silknow.org/vocabulary> {
+            <$uri> skos:member ?child .
+            FILTER NOT EXISTS { ?child skos:broader ?xxx . ?xxx skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> }
+        }
+    }
     OPTIONAL {
       ?child skos:prefLabel ?label .
       FILTER (langMatches(lang(?label), "$lang"))
@@ -1840,20 +1849,25 @@ WHERE {
   VALUES ?rdfType { skos:Concept skos:Collection }
   OPTIONAL {
     {
-        {GRAPH <http://data.silknow.org/aat> {?broad skos:member* <$uri> .}}
-        UNION
-        {GRAPH <http://data.silknow.org/vocabulary> {<$uri> skos:broader* ?broad . FILTER(!STRSTARTS(STR(?broad), "http://vocab.getty.edu/aat/"))}}
+        {
+            GRAPH <http://data.silknow.org/aat> { ?broad skos:member* <$uri> . }
+        }
     }
     ?broad skos:prefLabel ?lab .
     FILTER (langMatches(lang(?lab), "$lang"))
     OPTIONAL { ?broad skos:notation ?nota }
     OPTIONAL {
-        {?parent skos:member ?broad . FILTER(STRSTARTS(STR(?parent), "http://vocab.getty.edu/aat/"))}
+        {
+            ?parent skos:member ?broad .
+            FILTER(STRSTARTS(STR(?parent), "http://vocab.getty.edu/aat/"))
+            FILTER NOT EXISTS { ?broad skos:broader ?xxx }
+        }
         UNION
-        {?broad skos:broader ?parent . FILTER(!STRSTARTS(STR(?parent), "http://vocab.getty.edu/aat/"))}
+        {
+            ?broad skos:broader ?parent . FILTER(!STRSTARTS(STR(?parent), "http://vocab.getty.edu/aat/"))
+        }
     }
-
-    GRAPH <http://data.silknow.org/vocabulary> {
+    {
         OPTIONAL {
             {
                 { GRAPH <http://data.silknow.org/aat> { ?broad skos:member ?children . } }
