@@ -1840,23 +1840,23 @@ WHERE {
   VALUES ?rdfType { skos:Concept skos:Collection }
   OPTIONAL {
     {
-        {?broad skos:member* <$uri> .}
+        {GRAPH <http://data.silknow.org/aat> {?broad skos:member* <$uri> .}}
         UNION
-        {<$uri> skos:broader ?broad .}
+        {GRAPH <http://data.silknow.org/vocabulary> {<$uri> skos:broader* ?broad . FILTER(!STRSTARTS(STR(?broad), "http://vocab.getty.edu/aat/"))}}
     }
     ?broad skos:prefLabel ?lab .
     FILTER (langMatches(lang(?lab), "$lang"))
     OPTIONAL { ?broad skos:notation ?nota }
     OPTIONAL {
-        {?parent skos:member ?broad .}
+        {?parent skos:member ?broad . FILTER(STRSTARTS(STR(?parent), "http://vocab.getty.edu/aat/"))}
         UNION
-        {?broad skos:broader ?parent .}
+        {?broad skos:broader ?parent . FILTER(!STRSTARTS(STR(?parent), "http://vocab.getty.edu/aat/"))}
     }
 
     GRAPH <http://data.silknow.org/vocabulary> {
         OPTIONAL {
             {
-                { ?broad skos:member ?children . }
+                { GRAPH <http://data.silknow.org/aat> { ?broad skos:member ?children . } }
                 UNION
                 { ?children skos:broader ?broad . }
             }
