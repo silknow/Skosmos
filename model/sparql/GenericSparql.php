@@ -1581,9 +1581,26 @@ WHERE {
     <$uri> a ?rdfType .
     VALUES ?rdfType { skos:Concept skos:Collection }
     OPTIONAL {
-      <$uri> $propertyClause* ?object .
+      {
+        <$uri> $propertyClause* ?object .
+        ?object skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> .
+      }
+      UNION
+      {
+        <$uri> $propertyClause* ?xxx .
+        ?object skos:member ?xxx .
+      }
       OPTIONAL {
-        ?object $propertyClause ?dir .
+        {
+            ?dir skos:member ?object .
+            FILTER NOT EXISTS { ?dir skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> . }
+            FILTER NOT EXISTS { ?object skos:broader ?_xxx . FILTER(!STRSTARTS(STR(?_xxx), "http://vocab.getty.edu/aat/")) }
+        }
+        UNION
+        {
+            ?object $propertyClause ?dir .
+            FILTER(!STRSTARTS(STR(?dir), "http://vocab.getty.edu/aat/"))
+        }
         ?dir a ?dirRdfType .
         VALUES ?dirRdfType { skos:Concept skos:Collection }
       }
@@ -1841,49 +1858,70 @@ EOQ;
         $fcl = $this->generateFromClause();
         $propertyClause = implode('|', $props);
         $query = <<<EOQ
-SELECT DISTINCT
-?broad ?parent ?children ?grandchildren
-(SAMPLE(?lab) as ?label) (SAMPLE(?childlab) as ?childlabel) (SAMPLE(?topcs) AS ?top) (SAMPLE(?nota) as ?notation) (SAMPLE(?childnota) as ?childnotation)
+SELECT DISTINCT ?broad ?parent ?children ?grandchildren
+(SAMPLE(?lab) as ?label) (SAMPLE(?childlab) as ?childlabel) (GROUP_CONCAT(?topcs; separator=" ") as ?tops)
+(SAMPLE(?nota) as ?notation) (SAMPLE(?childnota) as ?childnotation)
 WHERE {
-  <$uri> a ?rdfType .
-  VALUES ?rdfType { skos:Concept skos:Collection }
-  OPTIONAL {
-    {
-        {
-            GRAPH <http://data.silknow.org/aat> { ?broad skos:member* <$uri> . }
-        }
-    }
-    ?broad skos:prefLabel ?lab .
-    FILTER (langMatches(lang(?lab), "$lang"))
-    OPTIONAL { ?broad skos:notation ?nota }
+    <$uri> a ?rdfType .
+    VALUES ?rdfType { skos:Concept skos:Collection }
     OPTIONAL {
         {
-            ?parent skos:member ?broad .
-            FILTER(STRSTARTS(STR(?parent), "http://vocab.getty.edu/aat/"))
-            FILTER NOT EXISTS { ?broad skos:broader ?xxx }
+            <$uri> $propertyClause* ?broad .
+            ?broad skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> .
         }
-        UNION
-        {
-            ?broad skos:broader ?parent . FILTER(!STRSTARTS(STR(?parent), "http://vocab.getty.edu/aat/"))
+        OPTIONAL {
+            ?broad skos:prefLabel ?lab .
+            FILTER (langMatches(lang(?lab), "$lang"))
         }
-    }
-    {
+        OPTIONAL {
+            ?broad skos:prefLabel ?lab .
+            FILTER (langMatches(lang(?lab), "$fallback"))
+        }
+        OPTIONAL { # fallback - other language case
+            ?broad skos:prefLabel ?lab .
+        }
+        OPTIONAL { ?broad skos:notation ?nota . }
         OPTIONAL {
             {
-                { GRAPH <http://data.silknow.org/aat> { ?broad skos:member ?children . } }
-                UNION
-                { ?children skos:broader ?broad . }
+                ?broad $propertyClause ?parent .
+                FILTER NOT EXISTS { ?broad skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> . }
             }
-            ?children skos:prefLabel ?childlab .
-            FILTER (langMatches(lang(?childlab), "$lang"))
-            OPTIONAL { ?children skos:notation ?childnota }
+            UNION
+            {
+                ?parent skos:member ?broad .
+                ?broad skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> .
+            }
         }
+        OPTIONAL {
+            {
+                ?broad skos:narrower ?children .
+                FILTER NOT EXISTS { ?children skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> . }
+            }
+            UNION
+            {
+                ?broad skos:member ?children .
+                ?children skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> .
+            }
+            OPTIONAL {
+                ?children skos:prefLabel ?childlab .
+                FILTER (langMatches(lang(?childlab), "$lang"))
+            }
+            OPTIONAL {
+                ?children skos:prefLabel ?childlab .
+                FILTER (langMatches(lang(?childlab), "$fallback"))
+            }
+            OPTIONAL { # fallback - other language case
+                ?children skos:prefLabel ?childlab .
+            }
+            OPTIONAL {
+                ?children skos:notation ?childnota .
+            }
+        }
+        BIND ( EXISTS { ?children skos:narrower|skos:member ?a . } AS ?grandchildren )
+        OPTIONAL { ?broad skos:topConceptOf ?topcs . }
     }
-    BIND ( EXISTS { ?a skos:member ?children . } AS ?grandchildren )
-    OPTIONAL { ?broad skos:topConceptOf ?topcs . }
-  }
 }
-GROUP BY ?broad ?parent ?children ?grandchildren
+GROUP BY ?broad ?parent ?member ?children ?grandchildren
 EOQ;
         return $query;    }
 
@@ -1908,7 +1946,7 @@ EOQ;
             if (isset($row->exact)) {
                 $ret[$uri]['exact'] = $row->exact->getUri();
             }
-            if (isset($row->tops)) {
+            if (isset($row->tops) && $row->tops instanceof EasyRdf\Literal) {
                $topConceptsList=explode(" ", $row->tops->getValue());
                // sort to garantee an alphabetical ordering of the URI
                sort($topConceptsList);
