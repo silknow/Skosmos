@@ -1604,12 +1604,12 @@ WHERE {
         ?dir a ?dirRdfType .
         VALUES ?dirRdfType { skos:Concept skos:Collection }
       }
+      OPTIONAL {
+        ?object skos:prefLabel ?label .
+        FILTER (langMatches(lang(?label), "$lang"))
+      }
+      $otherlang
     }
-    OPTIONAL {
-      ?object skos:prefLabel ?label .
-      FILTER (langMatches(lang(?label), "$lang"))
-    }
-    $otherlang
   }
   GROUP BY ?object ?label
 }
