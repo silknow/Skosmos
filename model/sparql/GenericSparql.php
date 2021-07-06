@@ -1592,12 +1592,6 @@ WHERE {
       }
       OPTIONAL {
         {
-            ?dir skos:member ?object .
-            FILTER NOT EXISTS { ?dir skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> . }
-            FILTER NOT EXISTS { ?object skos:broader ?_broader . FILTER(!STRSTARTS(STR(?_broader), "http://vocab.getty.edu/aat/")) }
-        }
-        UNION
-        {
             ?object $propertyClause ?dir .
             FILTER(!STRSTARTS(STR(?dir), "http://vocab.getty.edu/aat/"))
         }
@@ -1899,7 +1893,6 @@ WHERE {
         OPTIONAL {
             {
                 ?broad skos:narrower ?children .
-                #FILTER NOT EXISTS { ?children skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> . }
             }
             UNION
             {
