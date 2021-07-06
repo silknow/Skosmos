@@ -1594,7 +1594,7 @@ WHERE {
         {
             ?dir skos:member ?object .
             FILTER NOT EXISTS { ?dir skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> . }
-            FILTER NOT EXISTS { ?object skos:broader ?_xxx . FILTER(!STRSTARTS(STR(?_xxx), "http://vocab.getty.edu/aat/")) }
+            FILTER NOT EXISTS { ?object skos:broader ?_broader . FILTER(!STRSTARTS(STR(?_broader), "http://vocab.getty.edu/aat/")) }
         }
         UNION
         {
@@ -1869,6 +1869,10 @@ WHERE {
             <$uri> $propertyClause* ?broad .
             ?broad skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> .
         }
+        UNION
+        {
+            ?broad skos:member <$uri> .
+        }
         OPTIONAL {
             ?broad skos:prefLabel ?lab .
             FILTER (langMatches(lang(?lab), "$lang"))
@@ -1884,23 +1888,24 @@ WHERE {
         OPTIONAL {
             {
                 ?broad $propertyClause ?parent .
-                FILTER NOT EXISTS { ?broad skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> . }
+                ?parent skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> .
             }
             UNION
             {
                 ?parent skos:member ?broad .
-                ?broad skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> .
+                FILTER NOT EXISTS { ?broad skos:broader ?_broader . ?_broader skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> . }
             }
         }
         OPTIONAL {
             {
                 ?broad skos:narrower ?children .
-                FILTER NOT EXISTS { ?children skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> . }
+                #FILTER NOT EXISTS { ?children skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> . }
             }
             UNION
             {
                 ?broad skos:member ?children .
                 ?children skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> .
+                FILTER NOT EXISTS { ?children skos:broader ?_parent . ?_parent skos:inScheme <http://data.silknow.org/vocabulary/silk-thesaurus> . }
             }
             OPTIONAL {
                 ?children skos:prefLabel ?childlab .
