@@ -36,7 +36,7 @@
             <div class="concept-images"></div>
             <script type="text/javascript">
               document.addEventListener('DOMContentLoaded', function() {
-                document.querySelectorAll('a.versal').forEach((elem) => {
+                document.querySelectorAll('.row[data-type="skos:exactMatch"] a.versal').forEach((elem) => {
                   const href = elem.href;
                   if (href.startsWith('http://www.wikidata.org/')) {
                     const parts = href.split('/');
