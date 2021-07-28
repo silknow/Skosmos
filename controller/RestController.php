@@ -109,14 +109,44 @@ class RestController extends Controller
         $entityKey = key($data['entities']);
         $imageName = $data['entities'][$entityKey]['claims']['P18'][0]['mainsnak']['datavalue']['value'];
 
-        $json = file_get_contents('https://en.wikipedia.org/w/api.php?action=query&format=json&titles=File:' . rawurlencode($imageName) . '&prop=imageinfo&iilimit=50&iiprop=timestamp|user|url');
+        $json = file_get_contents('https://en.wikipedia.org/w/api.php?action=query&format=json&titles=File:' . rawurlencode($imageName) . '&prop=imageinfo&iilimit=50&iiprop=url|extmetadata');
         $data = json_decode($json, true);
 
         $imageUrl = $data['query']['pages']['-1']['imageinfo'][0]['url'];
+        $extmetadata = $data['query']['pages']['-1']['imageinfo'][0]['extmetadata'];
+        $caption = '';
+        if (isset($extmetadata['Artist']) && isset($extmetadata['Artist']['value'])) {
+            $author = $extmetadata['Artist']['value'];
+            $caption .= '<div>' . $author . '</div>' . ' ';
+        }
+        if (isset($extmetadata['ObjectName']) && isset($extmetadata['ObjectName']['value'])) {
+            $objectName = $extmetadata['ObjectName']['value'];
+            $caption .= '<div><em>' . $objectName . '</em></div>' . ' ';
+        }
+
+        // Fetch institution
+        $json = file_get_contents('https://commons.wikimedia.org/w/api.php?action=query&prop=revisions&rvslots=main&rvprop=content&rvlimit=1&format=json&titles=File:' . rawurlencode($imageName));
+        $data = json_decode($json, true);
+        reset($data['query']['pages']);
+        $key = key($data['query']['pages']);
+        if (isset($data['query']['pages'][$key])) {
+            $content = $data['query']['pages'][$key]['revisions'][0]['slots']['main']['*'];
+            preg_match('/institution={{(.*?)}}/', $content, $institutionArray);
+            if (isset($institutionArray[1])) {
+                $institution = $institutionArray[1];
+                if (substr($institution, 0, strlen('Institution:')) === 'Institution:') {
+                    $institution = substr($institution, strlen('Institution:'));
+                }
+                if (!empty($institution)) {
+                    $caption .= '<div>' . $institution . '</div>' . ' ';
+                }
+            }
+        }
 
         /* encode the results in a JSON-LD compatible array */
         $ret = array(
             'url' => $imageUrl,
+            'caption' => $caption,
         );
 
         return $this->returnJson($ret);

@@ -1150,7 +1150,6 @@ li.sub-group {
 }
 
 .crumb-path {
-  float:left;
   width: 100%;
 }
 
@@ -2187,6 +2186,26 @@ body, .versal, h1, h2, p, .versal-bold {
   }
 
 }
+
+.concept-images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 1.5em 0;
+}
+
+.concept-images .concept-image {
+  text-align: center;
+}
+
+.concept-images a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 
 <!--[if IE]>
 #vocab-info hr {

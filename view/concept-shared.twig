@@ -44,18 +44,27 @@
                     const baseHref = document.querySelector('base').href;
                     fetch(`${baseHref}rest/v1/wikidata-image?qid=${encodeURIComponent(wdt)}`).then(response => response.json()).then(data => {
                       const imageSrc = data.url;
+                      const imageCaption = data.caption;
+
+                      const conceptImage = document.createElement('div');
+                      conceptImage.className = 'concept-image';
 
                       const img = document.createElement('img');
-                      img.style.maxWidth = '300px';
+                      img.style.maxHeight = '200px';
                       img.src = imageSrc;
 
                       const link = document.createElement('a');
                       link.target = '_blank';
                       link.rel = 'noopener noreferrer';
                       link.href = imageSrc;
+                      link.appendChild(img);
+                      conceptImage.appendChild(link);
 
-                      link.append(img);
-                      document.querySelector('.concept-images').append(link);
+                      const caption = document.createElement('div');
+                      caption.innerHTML = imageCaption;
+                      conceptImage.appendChild(caption);
+
+                      document.querySelector('.concept-images').appendChild(conceptImage);
                     });
                   }
                 });
