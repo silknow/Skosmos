@@ -65,7 +65,7 @@
         {% endfor %}
       {% endif %}
       {% spaceless %}
-      <div class="row{% if concept.type == 'skosext:DeprecatedConcept' %} deprecated{% endif %}">
+      <div class="row{% if concept.type == 'skosext:DeprecatedConcept' %} deprecated{% endif %}" data-type="skos:prefLabel">
         <div class="property-label property-label-pref">
           <span class="versal">{{ 'skos:prefLabel'|trans|upper }}</span>
         </div>
@@ -86,7 +86,7 @@
       {% endspaceless %}
       {% for property in concept.properties %} {# loop through ConceptProperty objects #}
         {% if property.getSubPropertyOf != 'skos:hiddenLabel' %}
-        <div class="row{% if property.type == 'dc:isReplacedBy' %} replaced-by{% endif%}">
+        <div class="row{% if property.type == 'dc:isReplacedBy' %} replaced-by{% endif%}" data-type="{{ property.type }}">
           <div class="property-label">
             <span class="versal{% if property.type == 'rdf:type' %}-bold{% endif %}{% if not (property.type in property.description and '_help' in property.description) %} property-click" title="{{ property.description }}"{% else %}"{% endif %}>{{ property.label|upper }}</span>
           </div>
@@ -138,7 +138,7 @@
         {% endif %}
       {% endfor %}
       {% if concept.groupProperties %}
-      <div class="row">
+      <div class="row" data-type="skos:memberOf">
         <div class="property-label"><span class="versal property-click" title="{% trans "skosmos:memberOf_help" %}" >{{ 'skosmos:memberOf'|trans|upper }}</span></div>
         <div class="property-value-column"><div class="property-value-wrapper">
           <ul>
@@ -155,7 +155,7 @@
       </div>
       {% endif %}
       {% if concept.arrayProperties %}
-      <div class="row">
+      <div class="row" data-type="skos:memberOfArray">
         <div class="property-label"><span class="versal property-click" title="{% trans "skosmos:memberOfArray_help" %}" >{{ 'skosmos:memberOfArray'|trans|upper }}</span></div>
         <div class="property-value-column"><div class="property-value-wrapper">
           <ul>
@@ -207,7 +207,7 @@
       {% if appendixProperties %}
       <div class="concept-appendix">
         {% for property in appendixProperties %} {# loop through ConceptProperty objects #}
-        <div class="row{% if concept.type == 'skosext:DeprecatedConcept' %} deprecated{% endif %}">
+        <div class="row{% if concept.type == 'skosext:DeprecatedConcept' %} deprecated{% endif %}" data-type="{{ property.type }}">
           <div class="property-label"><span class="versal{% if not (property.type in property.description and '_help' in property.description) %} property-click" title="{{ property.description }}{% endif %}">{{ property.label|upper }}</span></div>
           <div class="property-value-column">
           {% for propval in property.values %} {# loop through ConceptPropertyValue objects #}
